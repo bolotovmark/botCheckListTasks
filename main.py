@@ -17,7 +17,6 @@ from adminPanel.panel import menu_changeUsers, register_handlers_admin_panel
 
 from database.methods import db_exists_user, db_remove_user
 
-
 API_TOKEN = '6323770760:AAFpXBDSSXeg5fqscK2ReStDX8oVFfSoDYE'
 
 # Configure logging
@@ -29,14 +28,16 @@ storage = MemoryStorage()
 dp = Dispatcher(bot, storage=storage)
 
 # Conn sqlite3
-#conn = sqlite3.connect('db.sqlite')
+# conn = sqlite3.connect('db.sqlite')
 
 register_handlers_start(dp)  # common.start
-register_handlers_list_users(dp)  # adminPanel.change_users.list_users
-register_handlers_change_users_panel(dp)  # adminPanel.change_users.menu
+
 register_handlers_admin_panel(dp)  # adminPanel.panel
+
 register_handlers_remove_user(dp)  # adminPanel.change_users.remove_user
-register_handlers_add_new_user(dp)
+register_handlers_add_new_user(dp)  # adminPanel.change_user.add_new_user
+register_handlers_change_users_panel(dp)  # adminPanel.change_users.menu
+register_handlers_list_users(dp)  # adminPanel.change_users.list_users
 
 
 # Удалить пользователя
@@ -64,6 +65,7 @@ async def remove_approved(message: types.Message, state: FSMContext):
         return await menu_changeUsers(message)
 
 ############
+
 
 if __name__ == '__main__':
     executor.start_polling(dp, skip_updates=True)

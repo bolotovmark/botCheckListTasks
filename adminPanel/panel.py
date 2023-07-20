@@ -1,5 +1,5 @@
 from aiogram import Dispatcher, types
-from states import AdminPanel, FormChangeListUsers, FormChangeTypesTask
+from states.admin_panel import AdminPanel, FormChangeListUsers, FormChangeTypesTask
 from keyboards import Keyboards
 
 

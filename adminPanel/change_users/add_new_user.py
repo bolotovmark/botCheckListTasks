@@ -1,7 +1,7 @@
 from aiogram import types, Dispatcher
 from aiogram.dispatcher import FSMContext
 
-from states import FormAddNewUser, FormChangeListUsers
+from states.admin_panel import FormAddNewUser, FormChangeListUsers
 from database.methods import db_exists_user, db_insert_new_user
 from adminPanel.panel import menu_changeUsers
 from keyboards import Keyboards

@@ -11,6 +11,14 @@ class FormChangeListUsers(StatesGroup):
     menu = State()
 
 
+# 2
+class FormChangeTypesTask(StatesGroup):
+    menu = State()
+    name = State()
+    delete = State()
+    list = State()
+
+
 # 3
 class FormAddNewUser(StatesGroup):
     id = State()
@@ -19,7 +27,7 @@ class FormAddNewUser(StatesGroup):
     position_id = 0
 
 
-# 4
+# 3
 class FormRemoveUser(StatesGroup):
     id = State()
     check = State()

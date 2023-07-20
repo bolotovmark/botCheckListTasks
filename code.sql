@@ -19,6 +19,7 @@ CREATE TABLE `event` (
   `id_event` integer PRIMARY KEY,
   `name_object` text,
   `id_object_type` integer, --REF
+  `group` text,
   FOREIGN KEY (id_object_type) REFERENCES type_object(id_type) ON DELETE CASCADE
 );
 

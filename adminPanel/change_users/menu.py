@@ -1,6 +1,6 @@
 from aiogram import Dispatcher, types
 from adminPanel.panel import menu_changeUsers
-from states import *
+from states.admin_panel import *
 
 
 # @dp.message_handler(Text(equals='Отменить и вернуться в панель управления', ignore_case=True), state=[FormAddNewUser.id, FormAddNewUser.position_name, FormAddNewUser.name, FormRemoveUser.id, FormRemoveUser.check])
