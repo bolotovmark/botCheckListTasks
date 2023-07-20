@@ -29,6 +29,7 @@ async def db_remove_user(user_id: str):
     cur = conn.cursor()
     cur.execute(f"DELETE FROM users WHERE id_user = {user_id};")
     conn.commit()
+    cur.close()
 
 
 async def db_get_list_user():
@@ -48,6 +49,28 @@ async def db_get_list_types_event():
     cur.close()
     return types
 
-async def db_insert_new_type_task():
+
+async def db_insert_new_type_event(name_type):
     cur = conn.cursor()
-    cur.execute()
+    cur.execute(f"INSERT INTO type_event(name_type) VALUES ('{name_type}');")
+    conn.commit()
+    cur.execute("SELECT last_insert_rowid();")
+    type_id = cur.fetchone()
+    cur.close()
+    return type_id
+
+
+async def db_insert_new_event(name_event, id_event):
+    cur = conn.cursor()
+    data_insert = (name_event, id_event)
+    cur.execute("INSERT INTO event(name_object, id_object_type) VALUES (?, ?);", data_insert)
+    conn.commit()
+    cur.close()
+
+
+async def db_get_name_type_event(id_type_event):
+    cur = conn.cursor()
+    cur.execute(f"SELECT name_type FROM type_event WHERE id_type = {id_type_event};")
+    name_type_event = cur.fetchone()
+    cur.close()
+    return name_type_event

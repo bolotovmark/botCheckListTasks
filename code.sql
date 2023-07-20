@@ -17,10 +17,10 @@ CREATE TABLE `type_event` (
 
 CREATE TABLE `event` (
   `id_event` integer PRIMARY KEY,
-  `name_object` text,
-  `id_object_type` integer, --REF
+  `name_event` text,
+  `id_event_type` integer, --REF
   `group` text,
-  FOREIGN KEY (id_object_type) REFERENCES type_event(id_type) ON DELETE CASCADE
+  FOREIGN KEY (id_event_type) REFERENCES type_event(id_type) ON DELETE CASCADE
 );
 
 CREATE TABLE `schedule_list` (

@@ -15,7 +15,7 @@ async def menu_changeUsers(message: types.Message):
 
 
 # @dp.message_handler(content_types=['text'], text='Редактировать список типов задач', state=AdminPanel.menu)
-async def menu_changeTypesTask(message: types.Message):
+async def menu_changeTask(message: types.Message):
     await FormChangeTasks.menu.set()
     await message.answer("Панель управления задачами", reply_markup=Keyboards.list_types)
 
@@ -37,7 +37,7 @@ def register_handlers_admin_panel(dp: Dispatcher):
                                 text='Панель управления пользователями',
                                 state=AdminPanel.menu)
 
-    dp.register_message_handler(menu_changeTypesTask,
+    dp.register_message_handler(menu_changeTask,
                                 content_types=['text'],
                                 text='Панель управления задачами',
                                 state=AdminPanel.menu)
