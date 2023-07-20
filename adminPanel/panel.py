@@ -1,5 +1,5 @@
 from aiogram import Dispatcher, types
-from states.admin_panel import AdminPanel, FormChangeListUsers, FormChangeTypesTask
+from states.admin_panel import AdminPanel, FormChangeListUsers, FormChangeTasks
 from keyboards import Keyboards
 
 
@@ -16,8 +16,7 @@ async def menu_changeUsers(message: types.Message):
 
 # @dp.message_handler(content_types=['text'], text='Редактировать список типов задач', state=AdminPanel.menu)
 async def menu_changeTypesTask(message: types.Message):
-    await FormChangeTypesTask.menu.set()
-
+    await FormChangeTasks.menu.set()
     await message.answer("Панель управления задачами", reply_markup=Keyboards.list_types)
 
 
@@ -46,4 +45,4 @@ def register_handlers_admin_panel(dp: Dispatcher):
     dp.register_message_handler(cancel_handler_panels_admin,
                                 content_types=['text'],
                                 text='Вернуться в главное меню',
-                                state=[FormChangeListUsers, FormChangeTypesTask])
+                                state=[FormChangeListUsers, FormChangeTasks])

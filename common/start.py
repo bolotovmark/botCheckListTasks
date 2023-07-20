@@ -1,7 +1,11 @@
 from aiogram import Dispatcher, types
 
 from keyboards import Keyboards
-from states import *
+
+from states.admin_panel import AdminPanel
+from states.none_auth import NoneAuth
+from states.employee_panel import EmployeePanel
+
 from database.methods import db_exists_user
 
 

@@ -39,3 +39,15 @@ async def db_get_list_user():
     users = cur.fetchall()
     cur.close()
     return users
+
+
+async def db_get_list_types_event():
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM type_event;")
+    types = cur.fetchall()
+    cur.close()
+    return types
+
+async def db_insert_new_type_task():
+    cur = conn.cursor()
+    cur.execute()

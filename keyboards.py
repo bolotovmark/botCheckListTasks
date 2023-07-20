@@ -36,9 +36,9 @@ class Keyboards:
 
     ###
     list_types = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    list_types.add(types.InlineKeyboardButton(text="Список типов задач"))
-    list_types.add(types.InlineKeyboardButton(text="Добавить новый тип"))
-    list_types.add(types.InlineKeyboardButton(text="Удалить тип"))
+    list_types.add(types.InlineKeyboardButton(text="Добавить новую задачу"))
+    #list_types.add(types.InlineKeyboardButton(text="Добавить новый тип"))
+    #list_types.add(types.InlineKeyboardButton(text="Удалить тип"))
     list_types.add(types.InlineKeyboardButton(text="Вернуться в главное меню"))
     ###
 
@@ -51,3 +51,10 @@ class Keyboards:
     ]
     boolean_keyboard = types.ReplyKeyboardMarkup(keyboard=bool, resize_keyboard=True)
     boolean_keyboard.add(types.InlineKeyboardButton(text="Отменить и вернуться в панель управления"))
+    ###
+
+    ###
+    add_new_type_task = types.ReplyKeyboardMarkup(resize_keyboard=True)
+    add_new_type_task.add(types.InlineKeyboardButton(text="Добавить новую задачу"))
+    add_new_type_task.add(types.InlineKeyboardButton(text="Добавить новую задачу"))
+    ###

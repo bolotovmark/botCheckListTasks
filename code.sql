@@ -10,7 +10,7 @@ CREATE TABLE `users` (
   FOREIGN KEY (id_position_user) REFERENCES positions(id_position) ON DELETE CASCADE
 );
 
-CREATE TABLE `type_object` (
+CREATE TABLE `type_event` (
   `id_type` integer PRIMARY KEY,
   `name_type` text
 );
@@ -20,7 +20,7 @@ CREATE TABLE `event` (
   `name_object` text,
   `id_object_type` integer, --REF
   `group` text,
-  FOREIGN KEY (id_object_type) REFERENCES type_object(id_type) ON DELETE CASCADE
+  FOREIGN KEY (id_object_type) REFERENCES type_event(id_type) ON DELETE CASCADE
 );
 
 CREATE TABLE `schedule_list` (
