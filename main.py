@@ -19,6 +19,7 @@ from adminPanel.change_users.add_new_user import register_handlers_add_new_user
 from adminPanel.change_task.add_event import register_handlers_add_new_event
 from adminPanel.change_task.menu import register_handlers_change_tasks_panel
 from adminPanel.change_task.list_events import register_handlers_list_events
+from adminPanel.change_task.remove_event import register_handlers_remove_event
 from adminPanel.change_task.add_event import start_form_AddNewTypeTask
 
 from database.methods import db_exists_user, db_remove_user
@@ -48,10 +49,10 @@ register_handlers_list_users(dp)  # adminPanel.change_users.list_users
 register_handlers_add_new_event(dp)  # adminPanel.change_task.add_event
 register_handlers_change_tasks_panel(dp)  # adminPanel.change_task.menu
 register_handlers_list_events(dp)   # adminPanel.change_task.list_events
+register_handlers_remove_event(dp)  # adminPanel.change_task.add_event
 
 
 # Удалить пользователя
-
 @dp.message_handler(content_types=['text'], text='✅', state=FormRemoveUser.check)
 async def remove_approved(message: types.Message, state: FSMContext):
     async with state.proxy() as data:

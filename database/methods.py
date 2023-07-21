@@ -87,3 +87,17 @@ async def db_get_list_events():
         return list_events
     except:
         return False
+
+
+async def db_get_list_events_type(id_type):
+    try:
+        cur = conn.cursor()
+        cur.execute(f"SELECT * FROM event "
+                    f"JOIN type_event te on te.id_type = event.id_event_type "
+                    f"WHERE id_type = {id_type} "
+                    f"ORDER BY name_event ASC;")
+        list_events_type = cur.fetchall()
+        cur.close()
+        return list_events_type
+    except:
+        return False

@@ -45,5 +45,11 @@ class FormAddNewTypeTask(StatesGroup):
 
 
 # FormChangeTasks
-class FormWathcListEvent(StatesGroup):
+class FormWatchListEvent(StatesGroup):
     menu = State()
+
+
+# FormChangeTasks
+class FormRemoveEvent(StatesGroup):
+    select_type = State()
+    select_id = State()
