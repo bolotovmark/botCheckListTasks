@@ -71,15 +71,20 @@ def register_handlers_add_new_user(dp: Dispatcher):
                                 text='Добавить',
                                 state=FormChangeListUsers.menu)
     dp.register_message_handler(process_id_invalid,
-                                lambda message: not message.text.isdigit(),
+                                lambda message: not message.text.isdigit()
+                                                and message.text != "Отменить и вернуться в панель управления",
                                 state=FormAddNewUser.id)
     dp.register_message_handler(process_id,
-                                lambda message: message.text.isdigit(),
+                                lambda message: message.text.isdigit()
+                                                and message.text != "Отменить и вернуться в панель управления",
                                 state=FormAddNewUser.id)
     dp.register_message_handler(process_position_invalid,
-                                lambda message: message.text not in ["Администратор", "Рабочий"],
+                                lambda message: message.text not in ["Администратор", "Рабочий"]
+                                and message.text != "Отменить и вернуться в панель управления",
                                 state=FormAddNewUser.position_name)
     dp.register_message_handler(process_position,
                                 lambda message: message.text in ["Администратор", "Рабочий"],
                                 state=FormAddNewUser.position_name)
-    dp.register_message_handler(process_name, state=FormAddNewUser.name)
+    dp.register_message_handler(process_name,
+                                lambda message: message.text != "Отменить и вернуться в панель управления",
+                                state=FormAddNewUser.name)

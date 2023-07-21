@@ -37,7 +37,12 @@ async def start_form_AddNewEvent(message: types.Message):
 
 async def start_form_AddNewTypeTask(callback_query: types.CallbackQuery):
     await FormAddNewTypeTask.name.set()
-    await callback_query.answer("Введите название нового типа:")
+    bot = callback_query.bot
+    await bot.delete_message(
+        chat_id=callback_query.from_user.id,
+        message_id=callback_query.message.message_id)
+    await bot.send_message(callback_query.from_user.id, "Введите название нового типа:")
+    # await callback_query.answer("Введите название нового типа:")
 
 
 async def process_get_new_type(message: types.Message, state: FSMContext):
@@ -50,10 +55,15 @@ async def process_get_new_type(message: types.Message, state: FSMContext):
 
 
 async def process_get_type(callback_query: types.CallbackQuery, state: FSMContext):
+
     await FormAddNewEvent.name.set()
     async with state.proxy() as data:
         data['type_event'] = callback_query.data
-    await callback_query.answer("Придумайте наименование задаче: ")
+    bot = callback_query.bot
+    await bot.delete_message(
+        chat_id=callback_query.from_user.id,
+        message_id=callback_query.message.message_id)
+    await bot.send_message(callback_query.from_user.id, "Придумайте наименование задачи: ")
 
 
 async def process_name_type_task(message: types.Message, state: FSMContext):
@@ -62,9 +72,9 @@ async def process_name_type_task(message: types.Message, state: FSMContext):
         await db_insert_new_event(message.text, id_type_event)
 
         name_type_event = await db_get_name_type_event(id_type_event)
-        print(name_type_event[0])
+
         await message.answer("Добавлена новая задача в базу\n\n"
-                             f"ℹ️\nНаименование: *{message.text}*\n"
+                             f"\nНаименование: *{message.text}*\n"
                              f"Тип задачи: *{name_type_event[0]}*\n", parse_mode="MarkdownV2")
 
     await FormChangeTasks.menu.set()
@@ -72,6 +82,7 @@ async def process_name_type_task(message: types.Message, state: FSMContext):
 
 
 def register_handlers_add_new_event(dp: Dispatcher):
+
     dp.register_message_handler(start_form_AddNewEvent,
                                 content_types=['text'],
                                 text='Добавить новую задачу',
@@ -79,10 +90,6 @@ def register_handlers_add_new_event(dp: Dispatcher):
 
     dp.register_callback_query_handler(process_get_type,
                                        lambda c: c.data.isdigit(),
-                                       state=FormAddNewEvent.type_event)
-
-    dp.register_callback_query_handler(start_form_AddNewTypeTask,
-                                       lambda c: c.data == "addNewTypeTask",
                                        state=FormAddNewEvent.type_event)
 
     dp.register_message_handler(process_get_new_type,
@@ -93,3 +100,6 @@ def register_handlers_add_new_event(dp: Dispatcher):
                                 lambda message: message.text != "Отменить и вернуться в панель управления",
                                 state=FormAddNewEvent.name)
 
+    dp.register_callback_query_handler(start_form_AddNewTypeTask,
+                                       lambda c: c.data == "addNewTypeTask",
+                                       state=FormAddNewEvent.type_event)

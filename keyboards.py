@@ -37,7 +37,7 @@ class Keyboards:
     ###
     list_types = types.ReplyKeyboardMarkup(resize_keyboard=True)
     list_types.add(types.InlineKeyboardButton(text="Добавить новую задачу"))
-    #list_types.add(types.InlineKeyboardButton(text="Добавить новый тип"))
+    list_types.add(types.InlineKeyboardButton(text="Cписок задач"))
     #list_types.add(types.InlineKeyboardButton(text="Удалить тип"))
     list_types.add(types.InlineKeyboardButton(text="Вернуться в главное меню"))
     ###

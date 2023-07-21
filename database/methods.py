@@ -63,7 +63,7 @@ async def db_insert_new_type_event(name_type):
 async def db_insert_new_event(name_event, id_event):
     cur = conn.cursor()
     data_insert = (name_event, id_event)
-    cur.execute("INSERT INTO event(name_object, id_object_type) VALUES (?, ?);", data_insert)
+    cur.execute("INSERT INTO event(name_event, id_event_type) VALUES (?, ?);", data_insert)
     conn.commit()
     cur.close()
 
@@ -74,3 +74,16 @@ async def db_get_name_type_event(id_type_event):
     name_type_event = cur.fetchone()
     cur.close()
     return name_type_event
+
+
+async def db_get_list_events():
+    try:
+        cur = conn.cursor()
+        cur.execute(f"SELECT name_event, name_type FROM event "
+                    f"Join type_event te on te.id_type = event.id_event_type "
+                    f"ORDER BY id_type ASC")
+        list_events = cur.fetchall()
+        cur.close()
+        return list_events
+    except:
+        return False

@@ -4,7 +4,7 @@ from aiogram import Bot, Dispatcher, types, executor
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.dispatcher import FSMContext
 
-from states.admin_panel import FormRemoveUser, FormChangeListUsers
+from states.admin_panel import *
 from states.none_auth import NoneAuth
 
 from common.start import register_handlers_start
@@ -18,6 +18,9 @@ from adminPanel.change_users.add_new_user import register_handlers_add_new_user
 
 from adminPanel.change_task.add_event import register_handlers_add_new_event
 from adminPanel.change_task.menu import register_handlers_change_tasks_panel
+from adminPanel.change_task.list_events import register_handlers_list_events
+from adminPanel.change_task.add_event import start_form_AddNewTypeTask
+
 from database.methods import db_exists_user, db_remove_user
 
 API_TOKEN = '6323770760:AAFpXBDSSXeg5fqscK2ReStDX8oVFfSoDYE'
@@ -43,7 +46,8 @@ register_handlers_change_users_panel(dp)  # adminPanel.change_users.menu
 register_handlers_list_users(dp)  # adminPanel.change_users.list_users
 
 register_handlers_add_new_event(dp)  # adminPanel.change_task.add_event
-register_handlers_change_tasks_panel(dp)  # adminPanel.change_task_menu
+register_handlers_change_tasks_panel(dp)  # adminPanel.change_task.menu
+register_handlers_list_events(dp)   # adminPanel.change_task.list_events
 
 
 # Удалить пользователя

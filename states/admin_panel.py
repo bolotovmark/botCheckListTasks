@@ -42,3 +42,8 @@ class FormAddNewEvent(StatesGroup):
 # FormAddNewEvent
 class FormAddNewTypeTask(StatesGroup):
     name = State()
+
+
+# FormChangeTasks
+class FormWathcListEvent(StatesGroup):
+    menu = State()

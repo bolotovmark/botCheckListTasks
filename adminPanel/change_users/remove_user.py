@@ -3,7 +3,6 @@ from aiogram.dispatcher import FSMContext
 
 from states.admin_panel import FormChangeListUsers, FormRemoveUser
 
-
 from database.methods import *
 from adminPanel.panel import menu_changeUsers
 from keyboards import Keyboards
@@ -59,11 +58,13 @@ def register_handlers_remove_user(dp: Dispatcher):
                                 state=FormChangeListUsers.menu)
 
     dp.register_message_handler(process_remove_id_invalid,
-                                lambda message: not message.text.isdigit(),
+                                lambda message: not message.text.isdigit()
+                                                and message.text != "Отменить и вернуться в панель управления",
                                 state=FormRemoveUser.id)
 
     dp.register_message_handler(process_remove_id,
-                                lambda message: message.text.isdigit(),
+                                lambda message: message.text.isdigit()
+                                                and message.text != "Отменить и вернуться в панель управления",
                                 state=FormRemoveUser.id)
 
     dp.register_message_handler(remove_cancel,
