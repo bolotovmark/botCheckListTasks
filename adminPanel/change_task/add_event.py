@@ -75,7 +75,7 @@ async def process_name_type_task(message: types.Message, state: FSMContext):
 
         await message.answer("Добавлена новая задача в базу\n\n"
                              f"\nНаименование: *{message.text}*\n"
-                             f"Тип задачи: *{name_type_event[0]}*\n", parse_mode="MarkdownV2")
+                             f"Тип задачи: *{name_type_event[0]}*\n", parse_mode="Markdown")
 
     await FormChangeTasks.menu.set()
     return await menu_changeTask(message)
@@ -93,11 +93,11 @@ def register_handlers_add_new_event(dp: Dispatcher):
                                        state=FormAddNewEvent.type_event)
 
     dp.register_message_handler(process_get_new_type,
-                                lambda message: message.text != "Отменить и вернуться в панель управления",
+                                lambda message: message.text != "↩️ Отменить и вернуться в панель управления",
                                 state=FormAddNewTypeTask.name)
 
     dp.register_message_handler(process_name_type_task,
-                                lambda message: message.text != "Отменить и вернуться в панель управления",
+                                lambda message: message.text != "↩️ Отменить и вернуться в панель управления",
                                 state=FormAddNewEvent.name)
 
     dp.register_callback_query_handler(start_form_AddNewTypeTask,

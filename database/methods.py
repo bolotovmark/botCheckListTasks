@@ -27,6 +27,7 @@ async def db_insert_new_user(user_id, position_id, name):
 
 async def db_remove_user(user_id: str):
     cur = conn.cursor()
+    cur.execute("PRAGMA foreign_keys = ON")
     cur.execute(f"DELETE FROM users WHERE id_user = {user_id};")
     conn.commit()
     cur.close()
@@ -63,7 +64,7 @@ async def db_insert_new_type_event(name_type):
 async def db_insert_new_event(name_event, id_event):
     cur = conn.cursor()
     data_insert = (name_event, id_event)
-    cur.execute("INSERT INTO event(name_event, id_event_type) VALUES (?, ?);", data_insert)
+    cur.execute("INSERT INTO event(name_event, id_type_event) VALUES (?, ?);", data_insert)
     conn.commit()
     cur.close()
 
@@ -80,7 +81,7 @@ async def db_get_list_events():
     try:
         cur = conn.cursor()
         cur.execute(f"SELECT name_event, name_type FROM event "
-                    f"Join type_event te on te.id_type = event.id_event_type "
+                    f"Join type_event te on te.id_type = event.id_type_event "
                     f"ORDER BY id_type ASC")
         list_events = cur.fetchall()
         cur.close()
@@ -93,11 +94,33 @@ async def db_get_list_events_type(id_type):
     try:
         cur = conn.cursor()
         cur.execute(f"SELECT * FROM event "
-                    f"JOIN type_event te on te.id_type = event.id_event_type "
+                    f"JOIN type_event te on te.id_type = event.id_type_event "
                     f"WHERE id_type = {id_type} "
                     f"ORDER BY name_event ASC;")
         list_events_type = cur.fetchall()
         cur.close()
         return list_events_type
+    except:
+        return False
+
+
+async def db_remove_event(id_event):
+    try:
+        cur = conn.cursor()
+        cur.execute("PRAGMA foreign_keys = ON")
+        cur.execute(f"DELETE FROM event WHERE id_event = {id_event};")
+        conn.commit()
+        cur.close()
+    except:
+        return False
+
+
+async def db_remove_type(id_type):
+    try:
+        cur = conn.cursor()
+        cur.execute("PRAGMA foreign_keys = ON")
+        cur.execute(f"DELETE FROM type_event WHERE id_type = {id_type}")
+        conn.commit()
+        cur.close()
     except:
         return False

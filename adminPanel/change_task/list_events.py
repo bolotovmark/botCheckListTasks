@@ -33,9 +33,9 @@ async def watch_events(callback_query: types.CallbackQuery):
     bot = callback_query.bot
     out_text = ''
     if list_events_type:
-        out_text = out_text + f"---{list_events_type[0][1]}---\n\n"
+        out_text = out_text + f"---{list_events_type[0][5]}---\n\n"
         for event in list_events_type:
-            out_text = out_text + f"Задача: *{event[0]}*\n" \
+            out_text = out_text + f"Задача: *{event[1]}*\n" \
                                   f"------------------------------\n"
     else:
         out_text = "⚠️Задач такого типа в базе нет!"

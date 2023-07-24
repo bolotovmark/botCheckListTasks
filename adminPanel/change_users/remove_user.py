@@ -59,12 +59,12 @@ def register_handlers_remove_user(dp: Dispatcher):
 
     dp.register_message_handler(process_remove_id_invalid,
                                 lambda message: not message.text.isdigit()
-                                                and message.text != "Отменить и вернуться в панель управления",
+                                                and message.text != "↩️ Отменить и вернуться в панель управления",
                                 state=FormRemoveUser.id)
 
     dp.register_message_handler(process_remove_id,
                                 lambda message: message.text.isdigit()
-                                                and message.text != "Отменить и вернуться в панель управления",
+                                                and message.text != "↩️ Отменить и вернуться в панель управления",
                                 state=FormRemoveUser.id)
 
     dp.register_message_handler(remove_cancel,

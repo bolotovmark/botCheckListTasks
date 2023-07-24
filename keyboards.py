@@ -9,7 +9,7 @@ class Keyboards:
     position = types.ReplyKeyboardMarkup(resize_keyboard=True)
     position.add(types.InlineKeyboardButton(text="Администратор"))
     position.add(types.InlineKeyboardButton(text="Рабочий"))
-    position.add(types.InlineKeyboardButton(text="Отменить и вернуться в панель управления"))
+    position.add(types.InlineKeyboardButton(text="↩️ Отменить и вернуться в панель управления"))
     ###
 
     ###
@@ -26,7 +26,7 @@ class Keyboards:
 
     ###
     empty_method = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    empty_method.add(types.InlineKeyboardButton(text="Отменить и вернуться в панель управления"))
+    empty_method.add(types.InlineKeyboardButton(text="↩️ Отменить и вернуться в панель управления"))
     ###
 
     ###
@@ -34,7 +34,7 @@ class Keyboards:
     menu_change_user.add(types.InlineKeyboardButton(text="Список пользователей"))
     menu_change_user.add(types.InlineKeyboardButton(text="Добавить"))
     menu_change_user.add(types.InlineKeyboardButton(text="Удалить"))
-    menu_change_user.add(types.InlineKeyboardButton(text="Вернуться в главное меню"))
+    menu_change_user.add(types.InlineKeyboardButton(text="↩️ Вернуться в главное меню"))
     ###
 
     ###
@@ -42,7 +42,8 @@ class Keyboards:
     list_types.add(types.InlineKeyboardButton(text="Добавить новую задачу"))
     list_types.add(types.InlineKeyboardButton(text="Cписок задач"))
     list_types.add(types.InlineKeyboardButton(text="Удалить задачу"))
-    list_types.add(types.InlineKeyboardButton(text="Вернуться в главное меню"))
+    list_types.add(types.InlineKeyboardButton(text="Удалить тип задачи"))
+    list_types.add(types.InlineKeyboardButton(text="↩️ Вернуться в главное меню"))
     ###
 
     ###
@@ -53,7 +54,7 @@ class Keyboards:
         ],
     ]
     boolean_keyboard = types.ReplyKeyboardMarkup(keyboard=bool, resize_keyboard=True)
-    boolean_keyboard.add(types.InlineKeyboardButton(text="Отменить и вернуться в панель управления"))
+    boolean_keyboard.add(types.InlineKeyboardButton(text="↩️ Отменить и вернуться в панель управления"))
     ###
 
     ###
@@ -102,6 +103,7 @@ async def kb_events(type_id):
 
         if len(buf_list) != 0:
             inline_kb_full.row(buf_list[0])
+        # inline_kb_full.add(InlineKeyboardButton("↩️ Вернуться к выбору типа", callback_data="back"))
         return inline_kb_full
     else:
         return None

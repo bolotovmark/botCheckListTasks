@@ -53,3 +53,10 @@ class FormWatchListEvent(StatesGroup):
 class FormRemoveEvent(StatesGroup):
     select_type = State()
     select_id = State()
+
+
+# FormChangeTasks
+class FormRemoveTypeEvent(StatesGroup):
+    select_type = State()
+
+

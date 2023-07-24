@@ -44,5 +44,5 @@ def register_handlers_admin_panel(dp: Dispatcher):
 
     dp.register_message_handler(cancel_handler_panels_admin,
                                 content_types=['text'],
-                                text='Вернуться в главное меню',
+                                text='↩️ Вернуться в главное меню',
                                 state=[FormChangeListUsers, FormChangeTasks])
