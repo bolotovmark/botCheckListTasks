@@ -69,6 +69,14 @@ async def db_insert_new_event(name_event, id_event):
     cur.close()
 
 
+async def db_insert_new_event_3(name_event, id_event, group_name):
+    cur = conn.cursor()
+    data_insert = (name_event, id_event, group_name)
+    cur.execute("INSERT INTO event(name_event, id_type_event, group_text) VALUES (?, ?, ?)", data_insert)
+    conn.commit()
+    cur.close()
+
+
 async def db_get_name_type_event(id_type_event):
     cur = conn.cursor()
     cur.execute(f"SELECT name_type FROM type_event WHERE id_type = {id_type_event};")

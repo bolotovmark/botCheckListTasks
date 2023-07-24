@@ -18,6 +18,11 @@ class FormChangeTasks(StatesGroup):
     menu = State()
 
 
+# AdminPanel
+class FormChangeScheduleTask(StatesGroup):
+    menu = State()
+
+
 #  FormChangeListUsers
 class FormAddNewUser(StatesGroup):
     id = State()
@@ -36,6 +41,7 @@ class FormRemoveUser(StatesGroup):
 class FormAddNewEvent(StatesGroup):
     type_event = State()
     name = State()
+    bool_check = State()
     group_name = State()
 
 
@@ -58,5 +64,12 @@ class FormRemoveEvent(StatesGroup):
 # FormChangeTasks
 class FormRemoveTypeEvent(StatesGroup):
     select_type = State()
+
+
+# FormChangeScheduleTask
+class FormAddNewScheduleTask(StatesGroup):
+    type_id = State()
+    event_id = State()
+
 
 

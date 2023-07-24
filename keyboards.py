@@ -16,6 +16,7 @@ class Keyboards:
     menu_admin = types.ReplyKeyboardMarkup(resize_keyboard=True)
     menu_admin.add(types.InlineKeyboardButton(text="Панель управления пользователями"))
     menu_admin.add(types.InlineKeyboardButton(text="Панель управления задачами"))
+    menu_admin.add(types.InlineKeyboardButton(text="Панель управления ежедневным расписанием"))
     ##menu_admin.add(types.InlineKeyboardButton(text="Редактировать список задач"))
     ###
 
@@ -44,6 +45,14 @@ class Keyboards:
     list_types.add(types.InlineKeyboardButton(text="Удалить задачу"))
     list_types.add(types.InlineKeyboardButton(text="Удалить тип задачи"))
     list_types.add(types.InlineKeyboardButton(text="↩️ Вернуться в главное меню"))
+    ###
+
+    ###
+    menu_change_schedule_task = types.ReplyKeyboardMarkup(resize_keyboard=True)
+    menu_change_schedule_task.add(types.InlineKeyboardButton(text="Список ежедневных задач"))
+    menu_change_schedule_task.add(types.InlineKeyboardButton(text="Добавить задачи"))
+    menu_change_schedule_task.add(types.InlineKeyboardButton(text="Удалить задачи"))
+    menu_change_schedule_task.add(types.InlineKeyboardButton(text="↩️ Вернуться в главное меню"))
     ###
 
     ###

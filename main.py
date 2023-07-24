@@ -22,6 +22,9 @@ from adminPanel.change_task.list_events import register_handlers_list_events
 from adminPanel.change_task.remove_event import register_handlers_remove_event
 from adminPanel.change_task.remove_type import register_handlers_remove_type_event
 
+from adminPanel.change_schedule_task.menu import register_handlers_change_schedule_task_panel
+from adminPanel.change_schedule_task.add_task import register_handlers_add_schedule_task
+
 from database.methods import db_exists_user, db_remove_user
 
 API_TOKEN = '6323770760:AAFpXBDSSXeg5fqscK2ReStDX8oVFfSoDYE'
@@ -51,6 +54,9 @@ register_handlers_change_tasks_panel(dp)  # adminPanel.change_task.menu
 register_handlers_list_events(dp)   # adminPanel.change_task.list_events
 register_handlers_remove_event(dp)  # adminPanel.change_task.add_event
 register_handlers_remove_type_event(dp)  # adminPanel.change_task.remove_type
+
+register_handlers_change_schedule_task_panel(dp)    # adminPanel.change_schedule_task.menu
+register_handlers_add_schedule_task(dp)
 
 
 # Удалить пользователя
