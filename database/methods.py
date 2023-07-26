@@ -209,11 +209,11 @@ async def list_schedule_task():
     types_event = await db_get_list_types_event()
     if types_event:
         name_type = types_event[0][1]
-        out_text = f'*▪️{name_type}*\n'
+        out_text = f'*🔹{name_type}*\n'
         for type_event in types_event:
             if name_type != type_event[1]:
                 name_type = type_event[1]
-                out_text = out_text + f'\n\n*▪️{name_type}*\n'
+                out_text = out_text + f'\n\n*🔹{name_type}*\n'
 
             schedule_tasks = await db_get_list_schedule_type(type_event[0])
 

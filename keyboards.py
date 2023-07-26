@@ -81,6 +81,11 @@ class Keyboards:
     add_new_type_task.add(types.InlineKeyboardButton(text="Добавить новую задачу"))
     ###
 
+    ###
+    menu_employee = types.ReplyKeyboardMarkup(resize_keyboard=True)
+    menu_employee.add(types.InlineKeyboardButton(text="Календарь заданий"))
+    #menu_employee.add(types.InlineKeyboardButton(text="Добавить новую задачу"))
+    ###
 
 async def kb_types_events():
     types_event = await db_get_list_types_event()

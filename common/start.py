@@ -18,7 +18,7 @@ async def start(message: types.Message):
             keyboard = Keyboards.menu_admin
             await AdminPanel.menu.set()
         elif int(user[1]) == 1:
-            keyboard = Keyboards.non_auth
+            keyboard = Keyboards.menu_employee
             await EmployeePanel.menu.set()
         else:
             keyboard = Keyboards.non_auth

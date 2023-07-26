@@ -36,7 +36,7 @@ CREATE TABLE `daily_tasks` (
   `date_task` date,
   `id_schedule_task` integer,
   `id_employee_schedule` integer,
-  `mark` integer,
+  `mark` integer DEFAULT false,
   `description` text,
   FOREIGN KEY (`id_schedule_task`) REFERENCES `list_schedule` (`id_schedule`),
   FOREIGN KEY (`id_employee_schedule`) REFERENCES `users` (`id_user`) ON DELETE CASCADE
