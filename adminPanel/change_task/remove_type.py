@@ -1,5 +1,4 @@
 from aiogram import Dispatcher, types
-from aiogram.dispatcher import FSMContext
 
 from states.admin_panel import FormChangeTasks, FormRemoveTypeEvent
 
@@ -19,7 +18,7 @@ async def start_form_removeTypeEvent(message: types.Message):
 async def process_remove_type_event(callback_query: types.CallbackQuery):
     id_type = callback_query.data
     await db_remove_type(id_type)
-    await callback_query.bot.edit_message_text(text="удалено",
+    await callback_query.bot.edit_message_text(text="Удалено успешно",
                                                chat_id=callback_query.from_user.id,
                                                message_id=callback_query.message.message_id,
                                                reply_markup=await kb_types_events())

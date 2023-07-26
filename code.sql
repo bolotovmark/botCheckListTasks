@@ -2,7 +2,7 @@ CREATE TABLE `event` (
   `id_event` integer PRIMARY KEY,
   `name_event` text,
   `id_type_event` integer,
-  `group` text,
+  `group_text` text,
   FOREIGN KEY (`id_type_event`) REFERENCES `type_event` (`id_type`) ON DELETE CASCADE
 );
 
@@ -38,7 +38,7 @@ CREATE TABLE `daily_tasks` (
   `id_employee_schedule` integer,
   `mark` integer,
   `description` text,
-  FOREIGN KEY (`id_schedule_task`) REFERENCES `list_schedule` (`id_schedule`) ON DELETE CASCADE,
+  FOREIGN KEY (`id_schedule_task`) REFERENCES `list_schedule` (`id_schedule`),
   FOREIGN KEY (`id_employee_schedule`) REFERENCES `users` (`id_user`) ON DELETE CASCADE
 );
 

@@ -14,6 +14,7 @@ def register_handlers_change_tasks_panel(dp: Dispatcher):
                                 content_types=['text'],
                                 text='↩️ Отменить и вернуться в панель управления',
                                 state=[FormAddNewEvent.type_event, FormAddNewEvent.name,
+                                       FormAddNewEvent.bool_check, FormAddNewEvent.group_name,
                                        FormAddNewTypeTask.name, FormWatchListEvent.menu,
                                        FormRemoveEvent.select_type, FormRemoveEvent.select_id,
                                        FormRemoveTypeEvent.select_type])

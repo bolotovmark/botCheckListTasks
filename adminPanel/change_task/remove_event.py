@@ -19,6 +19,7 @@ async def process_select_type(callback_query: types.CallbackQuery, state: FSMCon
     async with state.proxy() as data:
         data['select_type'] = callback_query.data
         type_id = data['select_type']
+    print(type_id)
     await FormRemoveEvent.select_id.set()
     bot = callback_query.bot
     await bot.edit_message_text(
@@ -33,6 +34,8 @@ async def process_select_type(callback_query: types.CallbackQuery, state: FSMCon
 async def process_select_id(callback_query: types.CallbackQuery, state: FSMContext):
     id_task = callback_query.data
     await db_remove_event(id_task)
+    async with state.proxy() as data:
+        callback_query.data = data['select_type']
     return await process_select_type(callback_query, state)
 
 

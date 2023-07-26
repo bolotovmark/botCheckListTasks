@@ -5,7 +5,7 @@ from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from states.admin_panel import *
 
 from database.methods import db_get_list_types_event, db_insert_new_type_event
-from database.methods import db_insert_new_event, db_get_name_type_event
+from database.methods import db_insert_new_event, db_get_name_type_event, db_insert_new_event_3
 
 from keyboards import Keyboards
 
@@ -68,17 +68,49 @@ async def process_get_type(callback_query: types.CallbackQuery, state: FSMContex
 
 async def process_name_type_task(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
-        id_type_event = data['type_event']
-        await db_insert_new_event(message.text, id_type_event)
+        data['name'] = message.text
+    await FormAddNewEvent.bool_check.set()
+    await message.answer("Хотите добавить ключевое слово для группировки?", reply_markup=Keyboards.boolean_keyboard)
 
-        name_type_event = await db_get_name_type_event(id_type_event)
+
+async def process_choice_true(message: types.Message, state: FSMContext):
+    await FormAddNewEvent.group_name.set()
+    await message.answer("Напишите к какой группе относиться задача", reply_markup=Keyboards.empty_method)
+
+
+
+async def process_choice_false(message: types.Message, state: FSMContext):
+    async with state.proxy() as data:
+        id_type = data['type_event']
+        name = data['name']
+        await db_insert_new_event(name, id_type)
+
+        name_type_event = await db_get_name_type_event(id_type)
 
         await message.answer("Добавлена новая задача в базу\n\n"
-                             f"\nНаименование: *{message.text}*\n"
+                             f"\nНаименование: *{name}*\n"
                              f"Тип задачи: *{name_type_event[0]}*\n", parse_mode="Markdown")
 
-    await FormChangeTasks.menu.set()
-    return await menu_changeTask(message)
+        await FormChangeTasks.menu.set()
+        return await menu_changeTask(message)
+
+
+async def process_group_task(message: types.Message, state: FSMContext):
+    async with state.proxy() as data:
+        id_type = data['type_event']
+        name = data['name']
+        group = message.text
+        await db_insert_new_event_3(name, id_type, group)
+
+        name_type_event = await db_get_name_type_event(id_type)
+
+        await message.answer("Добавлена новая задача в базу\n\n"
+                             f"\nНаименование: *{name}*\n"
+                             f"Тип задачи: *{name_type_event[0]}*\n"
+                             f"Группа: *{group}*", parse_mode="Markdown")
+
+        await FormChangeTasks.menu.set()
+        return await menu_changeTask(message)
 
 
 def register_handlers_add_new_event(dp: Dispatcher):
@@ -103,3 +135,17 @@ def register_handlers_add_new_event(dp: Dispatcher):
     dp.register_callback_query_handler(start_form_AddNewTypeTask,
                                        lambda c: c.data == "addNewTypeTask",
                                        state=FormAddNewEvent.type_event)
+
+    dp.register_message_handler(process_choice_false,
+                                content_types=['text'],
+                                text='❌',
+                                state=FormAddNewEvent.bool_check)
+
+    dp.register_message_handler(process_choice_true,
+                                content_types=['text'],
+                                text='✅',
+                                state=FormAddNewEvent.bool_check)
+
+    dp.register_message_handler(process_group_task,
+                                lambda message: message.text != "↩️ Отменить и вернуться в панель управления",
+                                state=FormAddNewEvent.group_name)
