@@ -165,11 +165,40 @@ async def db_get_list_schedule_type(id_type):
         return False
 
 
-async def db_insert_new_schedule_task(event_id, author_id):
+async def db_get_list_schedule_type_offset(id_type, offset):
     try:
         cur = conn.cursor()
-        data_insert = (event_id, author_id)
+        cur.execute(f"SELECT id_schedule, name_event, group_text, name_type, name FROM list_schedule "
+                    f"JOIN event e on e.id_event = list_schedule.id_event_schedule "
+                    f"JOIN users u on u.id_user = list_schedule.id_author "
+                    f"JOIN type_event te on e.id_type_event = te.id_type "
+                    f"WHERE id_type = {id_type} "
+                    f"ORDER BY group_text ASC "
+                    f"LIMIT {offset}, 5")
+        list_schedule = cur.fetchall()
+        cur.close()
+        return list_schedule
+    except:
+        return False
+
+
+async def db_insert_new_schedule_task(id_event, id_author):
+    try:
+        cur = conn.cursor()
+        data_insert = (id_event, id_author)
         cur.execute(f"INSERT INTO list_schedule(id_event_schedule, id_author) VALUES (?, ?)", data_insert)
+        conn.commit()
+        cur.close()
+    except:
+        return False
+
+
+async def db_remove_schedule_task(id_task):
+    try:
+        print(id_task)
+        cur = conn.cursor()
+        cur.execute("PRAGMA foreign_keys = ON")
+        cur.execute(f"DELETE FROM list_schedule WHERE id_schedule = {id_task}")
         conn.commit()
         cur.close()
     except:
@@ -201,7 +230,7 @@ async def list_schedule_task():
                         i = 1
                         name_group = task[1]
                         out_text = out_text + f"\n  🔘*|{name_group}|*\n"
-                    out_text = out_text + f"{i}. *{task[0]}* / назначил: {task[3]}\n"
+                    out_text = out_text + f"{i}. *{task[0]}* \n`назначил: ({task[3]})`\n"
 
             else:
                 out_text = out_text + '-'

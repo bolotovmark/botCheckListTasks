@@ -14,7 +14,7 @@ async def start_form_addNewScheduleTask(message: types.Message, state: FSMContex
     async with state.proxy() as data:
         data['page'] = 0
     await message.answer("Открыта форма добавления ежедневных задач", reply_markup=Keyboards.empty_method)
-    await message.answer("Выберите тип задачи", reply_markup=await kb_types_events())
+    await message.answer("Выберите тип задачи, которую хотите добавить", reply_markup=await kb_types_events())
 
 
 async def process_get_type_id(callback_query: types.CallbackQuery, state: FSMContext):
@@ -24,7 +24,6 @@ async def process_get_type_id(callback_query: types.CallbackQuery, state: FSMCon
         data['type_id'] = callback_query.data
         type_id = data['type_id']
         page = data['page']
-        print(page)
     await FormAddNewScheduleTask.event_id.set()
     bot = callback_query.bot
 
@@ -49,7 +48,7 @@ async def process_get_type_id(callback_query: types.CallbackQuery, state: FSMCon
         out_text = out_text + 'Нет заданий'
 
     await bot.edit_message_text(
-        text=out_text + "\nВыберите задачу, которую хотите добавить",
+        text=out_text + "\n*Выберите задачу, которую хотите добавить*",
         chat_id=callback_query.from_user.id,
         message_id=callback_query.message.message_id,
         reply_markup=await kb_book_events(type_id, page),
@@ -79,6 +78,10 @@ async def process_back_page(callback_query: types.CallbackQuery, state: FSMConte
     return await process_get_type_id(callback_query, state)
 
 
+async def process_back_to_menu(callback_query: types.CallbackQuery, state: FSMContext):
+    return await start_form_addNewScheduleTask(callback_query.message, state)
+
+
 def register_handlers_add_schedule_task(dp: Dispatcher):
     dp.register_message_handler(start_form_addNewScheduleTask,
                                 content_types=['text'],
@@ -99,4 +102,8 @@ def register_handlers_add_schedule_task(dp: Dispatcher):
 
     dp.register_callback_query_handler(process_back_page,
                                        lambda c: c.data == "back",
+                                       state=FormAddNewScheduleTask.event_id)
+
+    dp.register_callback_query_handler(process_back_to_menu,
+                                       lambda c: c.data == "back_to_menu",
                                        state=FormAddNewScheduleTask.event_id)

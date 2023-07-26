@@ -1,7 +1,8 @@
 from aiogram import types
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
-from database.methods import db_get_list_types_event, db_get_list_events_type, db_get_list_events_type_offset
+from database.methods import db_get_list_types_event, db_get_list_events_type, \
+    db_get_list_events_type_offset, db_get_list_schedule_type_offset
 
 
 class Keyboards:
@@ -131,8 +132,6 @@ async def kb_book_events(type_id, offset):
     events = await db_get_list_events_type_offset(type_id, offset)
     inline_kb_full = InlineKeyboardMarkup(row_width=2)
     if events:
-
-
         for event in events:
             inline_kb_full.add(InlineKeyboardButton(f"{event[1]}({event[3]})", callback_data=f"{event[0]}"))
 
@@ -140,10 +139,28 @@ async def kb_book_events(type_id, offset):
             inline_kb_full.row(InlineKeyboardButton("⏪Назад", callback_data="back"), InlineKeyboardButton("⏩Вперед", callback_data="next"))
         else:
             inline_kb_full.add(InlineKeyboardButton("⏩Вперед", callback_data="next"))
-        # inline_kb_full.add(InlineKeyboardButton("↩️ Вернуться к выбору типа", callback_data="back"))
-
     else:
         inline_kb_full.add(InlineKeyboardButton("⏪Назад", callback_data="back"))
 
+    inline_kb_full.add(InlineKeyboardButton("↩️ Вернуться к выбору типа", callback_data="back_to_menu"))
     return inline_kb_full
 
+
+async def kb_book_schedule_tasks(type_id, offset):
+    schedule_tasks = await db_get_list_schedule_type_offset(type_id, offset)
+
+    inline_kb_full = InlineKeyboardMarkup(row_width=2)
+    if schedule_tasks:
+        for event in schedule_tasks:
+            inline_kb_full.add(InlineKeyboardButton(f"{event[1]}({event[2]})", callback_data=f"{event[0]}"))
+
+        if offset >= 5:
+            inline_kb_full.row(InlineKeyboardButton("⏪Назад", callback_data="back"),
+                               InlineKeyboardButton("⏩Вперед", callback_data="next"))
+        else:
+            inline_kb_full.add(InlineKeyboardButton("⏩Вперед", callback_data="next"))
+    else:
+        inline_kb_full.add(InlineKeyboardButton("⏪Назад", callback_data="back"))
+
+    inline_kb_full.add(InlineKeyboardButton("↩️ Вернуться к выбору типа", callback_data="back_to_menu"))
+    return inline_kb_full

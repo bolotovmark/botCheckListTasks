@@ -72,4 +72,8 @@ class FormAddNewScheduleTask(StatesGroup):
     event_id = State()
 
 
+# FormChangeScheduleTask
+class FormRemoveScheduleTask(StatesGroup):
+    type_id = State()
+    task_id = State()
 

@@ -25,6 +25,7 @@ from adminPanel.change_task.remove_type import register_handlers_remove_type_eve
 from adminPanel.change_schedule_task.menu import register_handlers_change_schedule_task_panel
 from adminPanel.change_schedule_task.add_task import register_handlers_add_schedule_task
 from adminPanel.change_schedule_task.list import register_handlers_list_schedule_task
+from adminPanel.change_schedule_task.remove_task import register_handlers_remove_schedule_task
 
 from database.methods import db_exists_user, db_remove_user
 
@@ -59,7 +60,7 @@ register_handlers_remove_type_event(dp)  # adminPanel.change_task.remove_type
 register_handlers_change_schedule_task_panel(dp)    # adminPanel.change_schedule_task.menu
 register_handlers_add_schedule_task(dp)  # adminPanel.change_schedule_task.add_task
 register_handlers_list_schedule_task(dp)  # adminPanel.change_schedule_task.list
-
+register_handlers_remove_schedule_task(dp)
 
 # Удалить пользователя
 @dp.message_handler(content_types=['text'], text='✅', state=FormRemoveUser.check)
