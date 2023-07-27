@@ -28,6 +28,7 @@ from adminPanel.change_schedule_task.list import register_handlers_list_schedule
 from adminPanel.change_schedule_task.remove_task import register_handlers_remove_schedule_task
 
 from employeePanel.panel import register_handlers_employee_panel
+from employeePanel.list_task import register_handlers_employee_calendar_panel
 from database.methods import db_exists_user, db_remove_user
 
 API_TOKEN = '6323770760:AAFpXBDSSXeg5fqscK2ReStDX8oVFfSoDYE'
@@ -66,7 +67,7 @@ register_handlers_remove_schedule_task(dp)  # adminPanel.change_schedule_task.re
 #####
 
 register_handlers_employee_panel(dp)  # employeePanel.panel
-
+register_handlers_employee_calendar_panel(dp)  # employeePanel.list_task
 
 # Удалить пользователя
 @dp.message_handler(content_types=['text'], text='✅', state=FormRemoveUser.check)

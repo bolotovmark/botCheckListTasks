@@ -33,7 +33,7 @@ CREATE TABLE `users` (
 
 CREATE TABLE `daily_tasks` (
   `id_task` integer PRIMARY KEY,
-  `date_task` date,
+  `date_task` date DEFAULT (date('now','localtime')),
   `id_schedule_task` integer,
   `id_employee_schedule` integer,
   `mark` integer DEFAULT false,

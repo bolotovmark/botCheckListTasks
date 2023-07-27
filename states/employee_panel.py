@@ -8,4 +8,13 @@ class EmployeePanel(StatesGroup):
 
 # EmployeePanel
 class FormNavigateScheduleTasks(StatesGroup):
-    menu = State()
+    select_offset = State()
+    navigate = State()
+
+
+# EmployeePanel
+class FormMarkDailyTask(StatesGroup):
+    select_type = State()
+    select_mark = State()
+    description = State()
+
