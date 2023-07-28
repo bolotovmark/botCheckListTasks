@@ -41,7 +41,7 @@ async def process_get_type_id(callback_query: types.CallbackQuery, state: FSMCon
                 i = 1
                 name_group = task[1]
                 out_text = out_text + f"\n*🔘|{name_group}|*\n"
-            out_text = out_text + f"{i}. *{task[0]}* / назначил: {task[3]}\n"
+            out_text = out_text + f"{i}. *{task[0]}*\n `назначил: {task[3]}`\n"
 
     else:
         out_text = out_text + 'Нет заданий'

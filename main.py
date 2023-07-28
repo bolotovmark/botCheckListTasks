@@ -27,6 +27,9 @@ from adminPanel.change_schedule_task.add_task import register_handlers_add_sched
 from adminPanel.change_schedule_task.list import register_handlers_list_schedule_task
 from adminPanel.change_schedule_task.remove_task import register_handlers_remove_schedule_task
 
+from employeePanel.panel import register_handlers_employee_panel
+from employeePanel.list_task import register_handlers_employee_calendar_panel
+from employeePanel.mark_daily_task import register_handlers_employee_panel_markDailyTask
 from database.methods import db_exists_user, db_remove_user
 
 API_TOKEN = '6323770760:AAFpXBDSSXeg5fqscK2ReStDX8oVFfSoDYE'
@@ -44,6 +47,7 @@ dp = Dispatcher(bot, storage=storage)
 
 register_handlers_start(dp)  # common.start
 
+#####
 register_handlers_admin_panel(dp)  # adminPanel.panel
 
 register_handlers_remove_user(dp)  # adminPanel.change_users.remove_user
@@ -60,7 +64,13 @@ register_handlers_remove_type_event(dp)  # adminPanel.change_task.remove_type
 register_handlers_change_schedule_task_panel(dp)    # adminPanel.change_schedule_task.menu
 register_handlers_add_schedule_task(dp)  # adminPanel.change_schedule_task.add_task
 register_handlers_list_schedule_task(dp)  # adminPanel.change_schedule_task.list
-register_handlers_remove_schedule_task(dp)
+register_handlers_remove_schedule_task(dp)  # adminPanel.change_schedule_task.remove_task
+#####
+
+register_handlers_employee_panel(dp)  # employeePanel.panel
+register_handlers_employee_calendar_panel(dp)  # employeePanel.list_task
+register_handlers_employee_panel_markDailyTask(dp)  # employeePanel.mark_daily_task
+
 
 # Удалить пользователя
 @dp.message_handler(content_types=['text'], text='✅', state=FormRemoveUser.check)

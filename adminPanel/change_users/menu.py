@@ -3,7 +3,6 @@ from adminPanel.panel import menu_changeUsers
 from states.admin_panel import *
 
 
-# @dp.message_handler(Text(equals='Отменить и вернуться в панель управления', ignore_case=True), state=[FormAddNewUser.id, FormAddNewUser.position_name, FormAddNewUser.name, FormRemoveUser.id, FormRemoveUser.check])
 async def back_to_change_users_panel(message: types.Message):
     await FormChangeListUsers.menu.set()
     await message.answer('Действие отменено', reply_markup=types.ReplyKeyboardRemove())

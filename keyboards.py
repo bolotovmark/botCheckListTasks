@@ -2,7 +2,8 @@ from aiogram import types
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 from database.methods import db_get_list_types_event, db_get_list_events_type, \
-    db_get_list_events_type_offset, db_get_list_schedule_type_offset
+    db_get_list_events_type_offset, db_get_list_schedule_type_offset, db_get_list_daily_task_offset, \
+    db_get_list_daily_task_mark_false
 
 
 class Keyboards:
@@ -81,6 +82,35 @@ class Keyboards:
     add_new_type_task.add(types.InlineKeyboardButton(text="Добавить новую задачу"))
     ###
 
+    ###
+    menu_employee = types.ReplyKeyboardMarkup(resize_keyboard=True)
+    menu_employee.add(types.InlineKeyboardButton(text="Календарь заданий"))
+    menu_employee.add(types.InlineKeyboardButton(text="Отметить выполненные задания"))
+    # menu_employee.add(types.InlineKeyboardButton(text="Добавить новую задачу"))
+    ###
+
+    ###
+    generate_daily_tasks = types.ReplyKeyboardMarkup(resize_keyboard=True)
+    generate_daily_tasks.add(types.InlineKeyboardButton(text="Сгенерировать задания на сегодня"))
+    generate_daily_tasks.add(types.InlineKeyboardButton(text="↩️ Отменить и вернуться в панель управления"))
+    ###
+
+    ###
+    select_day = types.InlineKeyboardMarkup(row_width=2)
+    select_day.row(types.InlineKeyboardButton("Вчера", callback_data="back"),
+                   types.InlineKeyboardButton("Сегодня", callback_data="today"))
+    ###
+
+    ###
+    select_bool = types.InlineKeyboardMarkup(row_width=2)
+    select_bool.row(types.InlineKeyboardButton("✅", callback_data="true"),
+                    types.InlineKeyboardButton("❌", callback_data="false"))
+    ###
+
+    ###
+    skip_stage = types.InlineKeyboardMarkup(row_width=2)
+    skip_stage.add(types.InlineKeyboardButton("➡️ Пропустить шаг", callback_data="skip"))
+    ###
 
 async def kb_types_events():
     types_event = await db_get_list_types_event()
@@ -136,7 +166,8 @@ async def kb_book_events(type_id, offset):
             inline_kb_full.add(InlineKeyboardButton(f"{event[1]}({event[3]})", callback_data=f"{event[0]}"))
 
         if offset >= 5:
-            inline_kb_full.row(InlineKeyboardButton("⏪Назад", callback_data="back"), InlineKeyboardButton("⏩Вперед", callback_data="next"))
+            inline_kb_full.row(InlineKeyboardButton("⏪Назад", callback_data="back"),
+                               InlineKeyboardButton("⏩Вперед", callback_data="next"))
         else:
             inline_kb_full.add(InlineKeyboardButton("⏩Вперед", callback_data="next"))
     else:
@@ -163,4 +194,54 @@ async def kb_book_schedule_tasks(type_id, offset):
         inline_kb_full.add(InlineKeyboardButton("⏪Назад", callback_data="back"))
 
     inline_kb_full.add(InlineKeyboardButton("↩️ Вернуться к выбору типа", callback_data="back_to_menu"))
+    return inline_kb_full
+
+
+async def kb_book_calendar(offset):
+    daily_task = await db_get_list_daily_task_offset(offset)
+
+    inline_kb_full = InlineKeyboardMarkup(row_width=2)
+    if daily_task:
+        if offset != 0:
+            inline_kb_full.row(InlineKeyboardButton("⏪Предыдущий день", callback_data="back"),
+                               InlineKeyboardButton("⏩Следующий день", callback_data="next"))
+            inline_kb_full.add(InlineKeyboardButton("↩️ Вернуться к сегодняшнему числу",
+                                                    callback_data="today"))
+        else:
+            inline_kb_full.add(InlineKeyboardButton("⏪Предыдущий день", callback_data="back"))
+
+    else:
+        if offset == 0:
+            inline_kb_full.add(InlineKeyboardButton("⚙️Сгенерировать задания на сегодня",
+                                                    callback_data="generate"))
+            inline_kb_full.add(InlineKeyboardButton("⏪Предыдущий день", callback_data="back"))
+        else:
+            inline_kb_full.add(InlineKeyboardButton("⏩Следующий день", callback_data="next"))
+            inline_kb_full.add(InlineKeyboardButton("↩️ Вернуться к сегодняшнему числу",
+                                                    callback_data="today"))
+
+    return inline_kb_full
+
+
+async def kb_book_daily_task(day, page: int):
+    daily_task = await db_get_list_daily_task_mark_false(day, page)
+
+    inline_kb_full = InlineKeyboardMarkup(row_width=2)
+    if daily_task:
+        for event in daily_task:
+            if event[4] is None:
+                inline_kb_full.add(InlineKeyboardButton(f"{event[2]}({event[3]})",
+                                                        callback_data=f"{event[0]}"))
+            else:
+                inline_kb_full.add(InlineKeyboardButton(f"{event[2]}({event[3]}/{event[4]})",
+                                                        callback_data=f"{event[0]}"))
+        if int(page) >= 5:
+            inline_kb_full.row(InlineKeyboardButton("⏪Назад", callback_data="back"),
+                               InlineKeyboardButton("⏩Вперед", callback_data="next"))
+        else:
+            inline_kb_full.add(InlineKeyboardButton("⏩Вперед", callback_data="next"))
+    else:
+        inline_kb_full.add(InlineKeyboardButton("⏪Назад", callback_data="back"))
+
+    inline_kb_full.add(InlineKeyboardButton("↩️ Вернуться к выбору дня", callback_data="back_to_menu"))
     return inline_kb_full

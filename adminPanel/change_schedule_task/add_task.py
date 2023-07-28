@@ -8,7 +8,6 @@ from database.methods import db_get_list_schedule_type, db_insert_new_schedule_t
 from keyboards import Keyboards, kb_types_events, kb_book_events
 
 
-# @dp.message_handler(Text(equals='Отменить и вернуться в панель управления', ignore_case=True), state=[FormAddNewUser.id, FormAddNewUser.position_name, FormAddNewUser.name, FormRemoveUser.id, FormRemoveUser.check])
 async def start_form_addNewScheduleTask(message: types.Message, state: FSMContext):
     await FormAddNewScheduleTask.type_id.set()
     async with state.proxy() as data:
