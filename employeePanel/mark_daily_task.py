@@ -133,6 +133,7 @@ async def process_set_description(message: types.Message, state: FSMContext):
         await db_update_daily_task(task_id, user_id, description)
         await message.answer("✅ Задача успешно отмечена!")
     else:
+
         await message.answer("❌ Задача была отмечена ранее другим пользователем!")
     await EmployeePanel.menu.set()
     await state.reset_data()
