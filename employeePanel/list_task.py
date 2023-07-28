@@ -81,15 +81,4 @@ def register_handlers_employee_calendar_panel(dp: Dispatcher):
     dp.register_callback_query_handler(process_generate_daily_task,
                                        lambda c: c.data == "generate",
                                        state=FormNavigateScheduleTasks.select_offset)
-    # dp.register_message_handler(process_generate_daily_task,
-    #                             content_types=['text'],
-    #                             text='Сгенерировать задания на сегодня',
-    #                             state=FormNavigateScheduleTasks.check)
-    #
-    # dp.register_callback_query_handler(process_navigate_back,
-    #                                    lambda c: c.data == "back",
-    #                                    state=FormNavigateScheduleTasks.navigate)
-    #
-    # dp.register_callback_query_handler(process_navigate_next,
-    #                                    lambda c: c.data == "next",
-    #                                    state=FormNavigateScheduleTasks.navigate)
+

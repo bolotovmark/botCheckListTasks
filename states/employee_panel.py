@@ -14,7 +14,9 @@ class FormNavigateScheduleTasks(StatesGroup):
 
 # EmployeePanel
 class FormMarkDailyTask(StatesGroup):
-    select_type = State()
+    select_offset = State()
+    select_task_id = State()
     select_mark = State()
     description = State()
+
 

@@ -1,5 +1,5 @@
 from aiogram import Dispatcher, types
-from states.employee_panel import EmployeePanel, FormNavigateScheduleTasks
+from states.employee_panel import EmployeePanel, FormNavigateScheduleTasks, FormMarkDailyTask
 from keyboards import Keyboards
 
 
@@ -20,7 +20,9 @@ async def back_to_employee_panel(message: types.Message):
 
 def register_handlers_employee_panel(dp: Dispatcher):
     dp.register_message_handler(employee_menu,
-                                lambda message: message.text not in ["Календарь заданий"],
+                                lambda message:
+                                message.text not in ["Календарь заданий",
+                                                     "Отметить выполненные задания"],
                                 state=EmployeePanel.menu)
 
     dp.register_message_handler(cancel_handler_panels_employee,
@@ -31,4 +33,7 @@ def register_handlers_employee_panel(dp: Dispatcher):
     dp.register_message_handler(back_to_employee_panel,
                                 content_types=['text'],
                                 text='↩️ Отменить и вернуться в панель управления',
-                                state=[FormNavigateScheduleTasks.select_offset, FormNavigateScheduleTasks.navigate])
+                                state=[FormNavigateScheduleTasks.select_offset,
+                                       FormNavigateScheduleTasks.navigate,
+                                       FormMarkDailyTask.select_offset, FormMarkDailyTask.select_task_id,
+                                       FormMarkDailyTask.select_mark, FormMarkDailyTask.description])
