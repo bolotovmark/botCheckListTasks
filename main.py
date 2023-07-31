@@ -27,6 +27,9 @@ from adminPanel.change_schedule_task.add_task import register_handlers_add_sched
 from adminPanel.change_schedule_task.list import register_handlers_list_schedule_task
 from adminPanel.change_schedule_task.remove_task import register_handlers_remove_schedule_task
 
+from adminPanel.statistics.calendar import register_handlers_admin_calendar_panel
+from adminPanel.statistics.menu import register_handlers_statistics_panel
+
 from employeePanel.panel import register_handlers_employee_panel
 from employeePanel.list_task import register_handlers_employee_calendar_panel
 from employeePanel.mark_daily_task import register_handlers_employee_panel_markDailyTask
@@ -65,6 +68,9 @@ register_handlers_change_schedule_task_panel(dp)    # adminPanel.change_schedule
 register_handlers_add_schedule_task(dp)  # adminPanel.change_schedule_task.add_task
 register_handlers_list_schedule_task(dp)  # adminPanel.change_schedule_task.list
 register_handlers_remove_schedule_task(dp)  # adminPanel.change_schedule_task.remove_task
+
+register_handlers_admin_calendar_panel(dp)  # adminPanel.statistics.calendar
+register_handlers_statistics_panel(dp)  # adminPanel.statistics.menu
 #####
 
 register_handlers_employee_panel(dp)  # employeePanel.panel

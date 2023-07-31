@@ -41,13 +41,15 @@ async def process_get_type_id(callback_query: types.CallbackQuery, state: FSMCon
                 i = 1
                 name_group = task[1]
                 out_text = out_text + f"\n*🔘|{name_group}|*\n"
-            out_text = out_text + f"{i}. *{task[0]}* / назначил: {task[3]}\n"
+            out_text = out_text + f"{i}. *{task[0]}*\n"
 
     else:
         out_text = out_text + 'Нет заданий'
 
     await bot.edit_message_text(
-        text=out_text + "\n*Выберите задачу, которую хотите добавить*",
+        text=out_text + "\n*Выберите задачу, которую хотите добавить\n"
+                        "⚠️Если на сегодня задачи сгенерированы - изменения вступят со следующего дня "
+                        "(со следующей генерации задач)*",
         chat_id=callback_query.from_user.id,
         message_id=callback_query.message.message_id,
         reply_markup=await kb_book_events(type_id, page),
@@ -57,7 +59,7 @@ async def process_get_type_id(callback_query: types.CallbackQuery, state: FSMCon
 
 async def process_get_event_id(callback_query: types.CallbackQuery, state: FSMContext):
     event_id = callback_query.data
-    await db_insert_new_schedule_task(event_id, callback_query.from_user.id)
+    await db_insert_new_schedule_task(event_id)
     async with state.proxy() as data:
         callback_query.data = data['type_id']
     return await process_get_type_id(callback_query, state)

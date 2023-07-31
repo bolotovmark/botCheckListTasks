@@ -77,3 +77,11 @@ class FormRemoveScheduleTask(StatesGroup):
     type_id = State()
     task_id = State()
 
+
+class FormStatistics(StatesGroup):
+    menu = State()
+
+
+class FormNavigateCalendar(StatesGroup):
+    select_offset = State()
+

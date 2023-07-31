@@ -19,6 +19,7 @@ class Keyboards:
     menu_admin.add(types.InlineKeyboardButton(text="Панель управления пользователями"))
     menu_admin.add(types.InlineKeyboardButton(text="Панель управления задачами"))
     menu_admin.add(types.InlineKeyboardButton(text="Панель управления ежедневным расписанием"))
+    menu_admin.add(types.InlineKeyboardButton(text="Статистика"))
     ##menu_admin.add(types.InlineKeyboardButton(text="Редактировать список задач"))
     ###
 
@@ -111,6 +112,14 @@ class Keyboards:
     skip_stage = types.InlineKeyboardMarkup(row_width=2)
     skip_stage.add(types.InlineKeyboardButton("➡️ Пропустить шаг", callback_data="skip"))
     ###
+
+    ###
+    stat = types.ReplyKeyboardMarkup(resize_keyboard=True)
+    stat.add(types.InlineKeyboardButton(text="Календарь задач"))
+    stat.add(types.InlineKeyboardButton(text="Статистика за месяц"))
+    stat.add(types.InlineKeyboardButton(text="↩️ Вернуться в главное меню"))
+    ###
+
 
 async def kb_types_events():
     types_event = await db_get_list_types_event()
@@ -244,4 +253,17 @@ async def kb_book_daily_task(day, page: int):
         inline_kb_full.add(InlineKeyboardButton("⏪Назад", callback_data="back"))
 
     inline_kb_full.add(InlineKeyboardButton("↩️ Вернуться к выбору дня", callback_data="back_to_menu"))
+    return inline_kb_full
+
+
+async def kb_book_admin_calendar(offset):
+    inline_kb_full = InlineKeyboardMarkup(row_width=2)
+    if offset != 0:
+        inline_kb_full.row(InlineKeyboardButton("⏪Предыдущий день", callback_data="back"),
+                           InlineKeyboardButton("⏩Следующий день", callback_data="next"))
+        inline_kb_full.add(InlineKeyboardButton("↩️ Вернуться к сегодняшнему числу",
+                                                callback_data="today"))
+    else:
+        inline_kb_full.add(InlineKeyboardButton("⏪Предыдущий день", callback_data="back"))
+
     return inline_kb_full

@@ -25,7 +25,8 @@ async def start(message: types.Message):
         await message.answer(f"Здравствуйте {user[2]}!", reply_markup=keyboard)
     else:
         await message.answer(
-            f"Вас нет в базе. Обратитесь к администратору. \n\nВаш id для регистрации: {message.from_user.id}")
+            f"Вас нет в базе. Обратитесь к администратору. \n\nВаш id для регистрации: `{message.from_user.id}`",
+        parse_mode="Markdown")
 
 
 def register_handlers_start(dp: Dispatcher):
