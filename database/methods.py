@@ -291,7 +291,7 @@ async def db_insert_many_daily_task(list_tasks):
 async def db_get_schedule_tasks():
     try:
         cur = conn.cursor()
-        cur.execute("SELECT id_schedule FROM list_schedule;")
+        cur.execute("SELECT id_event_schedule FROM list_schedule;")
         list_tasks = cur.fetchall()
         cur.close()
         return list_tasks
