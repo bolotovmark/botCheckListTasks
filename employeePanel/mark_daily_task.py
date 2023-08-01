@@ -27,7 +27,7 @@ async def process_get_offset_day_id(callback_query: types.CallbackQuery, state: 
     out_text = await list_daily_task_mark_false(day)
     await FormMarkDailyTask.select_task_id.set()
     await bot.edit_message_text(
-        text=out_text + "\n*Выберите задачу, которую хотите удалить*",
+        text=out_text + "\n*Выберите задачу, которую хотите отметить*",
         chat_id=callback_query.from_user.id,
         message_id=callback_query.message.message_id,
         reply_markup=await kb_book_daily_task(day, 0),
@@ -134,7 +134,6 @@ async def process_set_description(message: types.Message, state: FSMContext):
         await db_update_daily_task(task_id, user_id, description)
         await message.answer("✅ Задача успешно отмечена!")
     else:
-
         await message.answer("❌ Задача была отмечена ранее другим пользователем!")
     await state.reset_data()
     await EmployeePanel.menu.set()

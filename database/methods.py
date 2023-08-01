@@ -49,7 +49,8 @@ async def db_get_list_types_event_offset(offset):
     cur.execute(f"SELECT DISTINCT id_type, name_type FROM daily_tasks "
                 f"JOIN event e on e.id_event = daily_tasks.id_event_task "
                 f"JOIN type_event te on te.id_type = e.id_type_event "
-                f"WHERE date_task = date('now','localtime', '{offset} day');")
+                f"WHERE date_task = date('now','localtime', '{offset} day') "
+                f"ORDER BY name_type;")
     types = cur.fetchall()
     cur.close()
     return types
@@ -58,10 +59,12 @@ async def db_get_list_types_event_offset(offset):
 async def db_get_list_types_event():
     cur = conn.cursor()
     cur.execute(f"SELECT DISTINCT id_type, name_type FROM event "
-                f"JOIN type_event te on te.id_type = event.id_type_event")
+                f"JOIN type_event te on te.id_type = event.id_type_event "
+                f"WHERE id_type != 1")
     types = cur.fetchall()
     cur.close()
     return types
+
 
 
 async def db_insert_new_type_event(name_type):
@@ -254,7 +257,8 @@ async def db_get_list_daily_task_type_mark_false(type_id, offset):
                     f"JOIN type_event te on te.id_type = e.id_type_event "
                     f"WHERE id_type = {type_id} "
                     f"AND date_task = date('now','localtime', '{offset} day') "
-                    f"AND mark == false;")
+                    f"AND mark == false "
+                    f"ORDER BY name_event;")
         list_tasks = cur.fetchall()
         cur.close()
         return list_tasks
@@ -270,6 +274,7 @@ async def db_get_list_daily_task_mark_false(day, page):
                     f"JOIN type_event te on te.id_type = e.id_type_event "
                     f"WHERE date_task = date('now','localtime', '{day} day') "
                     f"AND mark == false "
+                    f"ORDER BY name_type, name_event "
                     f"LIMIT {page}, 5;")
         list_tasks = cur.fetchall()
         cur.close()

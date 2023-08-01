@@ -16,10 +16,11 @@ class Keyboards:
 
     ###
     menu_admin = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    menu_admin.add(types.InlineKeyboardButton(text="Панель управления пользователями"))
-    menu_admin.add(types.InlineKeyboardButton(text="Панель управления задачами"))
-    menu_admin.add(types.InlineKeyboardButton(text="Панель управления ежедневным расписанием"))
     menu_admin.add(types.InlineKeyboardButton(text="Статистика"))
+    menu_admin.add(types.InlineKeyboardButton(text="Панель управления ежедневным расписанием"))
+    menu_admin.add(types.InlineKeyboardButton(text="Панель управления задачами"))
+    menu_admin.add(types.InlineKeyboardButton(text="Панель управления пользователями"))
+    menu_admin.add(types.InlineKeyboardButton(text="Назначить срочное задание"))
     ##menu_admin.add(types.InlineKeyboardButton(text="Редактировать список задач"))
     ###
 
