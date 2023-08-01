@@ -120,6 +120,12 @@ class Keyboards:
     stat.add(types.InlineKeyboardButton(text="↩️ Вернуться в главное меню"))
     ###
 
+    ###
+    select_month = types.InlineKeyboardMarkup(row_width=2)
+    select_month.row(types.InlineKeyboardButton("Прошлый месяц", callback_data="last_month"),
+                     types.InlineKeyboardButton("Этот месяц", callback_data="this_month"))
+    ###
+
 
 async def kb_types_events():
     types_event = await db_get_list_types_event()
@@ -256,7 +262,7 @@ async def kb_book_daily_task(day, page: int):
     return inline_kb_full
 
 
-async def kb_book_admin_calendar(offset):
+async def kb_book_admin_calendar_day(offset):
     inline_kb_full = InlineKeyboardMarkup(row_width=2)
     if offset != 0:
         inline_kb_full.row(InlineKeyboardButton("⏪Предыдущий день", callback_data="back"),
@@ -265,5 +271,18 @@ async def kb_book_admin_calendar(offset):
                                                 callback_data="today"))
     else:
         inline_kb_full.add(InlineKeyboardButton("⏪Предыдущий день", callback_data="back"))
+
+    return inline_kb_full
+
+
+async def kb_book_admin_calendar_month(offset):
+    inline_kb_full = InlineKeyboardMarkup(row_width=2)
+    if offset != 0:
+        inline_kb_full.row(InlineKeyboardButton("⏪Предыдущий месяц", callback_data="back"),
+                           InlineKeyboardButton("⏩Следующий месяц", callback_data="next"))
+        inline_kb_full.add(InlineKeyboardButton("↩️ Вернуться к сегодняшнему месяцу",
+                                                callback_data="today"))
+    else:
+        inline_kb_full.add(InlineKeyboardButton("⏪Предыдущий месяц", callback_data="back"))
 
     return inline_kb_full

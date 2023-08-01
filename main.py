@@ -29,6 +29,7 @@ from adminPanel.change_schedule_task.remove_task import register_handlers_remove
 
 from adminPanel.statistics.calendar import register_handlers_admin_calendar_panel
 from adminPanel.statistics.menu import register_handlers_statistics_panel
+from adminPanel.statistics.user_stat import register_handlers_admin_user_stat_panel
 
 from employeePanel.panel import register_handlers_employee_panel
 from employeePanel.list_task import register_handlers_employee_calendar_panel
@@ -71,6 +72,7 @@ register_handlers_remove_schedule_task(dp)  # adminPanel.change_schedule_task.re
 
 register_handlers_admin_calendar_panel(dp)  # adminPanel.statistics.calendar
 register_handlers_statistics_panel(dp)  # adminPanel.statistics.menu
+register_handlers_admin_user_stat_panel(dp)  # adminPanel.statistics.user_stat
 #####
 
 register_handlers_employee_panel(dp)  # employeePanel.panel

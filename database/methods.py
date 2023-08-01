@@ -1,4 +1,5 @@
 import sqlite3
+from datetime import datetime
 
 conn = sqlite3.connect('db.sqlite')
 
@@ -306,6 +307,14 @@ async def db_get_date_offset(offset):
     return date
 
 
+async def db_get_month_offset(offset):
+    cur = conn.cursor()
+    cur.execute(f"SELECT date('now', 'localtime', '{offset} month');")
+    month = cur.fetchone()
+    cur.close()
+    return month
+
+
 async def db_get_daily_task(task_id):
     cur = conn.cursor()
     cur.execute(f"SELECT id_task, name_event, name_type, group_text FROM daily_tasks "
@@ -344,14 +353,18 @@ async def db_update_daily_task(task_id, employee_id, description):
 async def db_get_user_statistics_month(offset):
     try:
         cur = conn.cursor()
-        cur.execute(f"SELECT name, SUM(mark) AS count FROM daily_tasks "
+        cur.execute(f"SELECT id_user, name, SUM(mark) AS count FROM daily_tasks "
                     f"JOIN users u on u.id_user = daily_tasks.id_employee_schedule "
                     f"WHERE date_task "
                     f"BETWEEN date('now', 'start of month', '{offset} month') "
-                    f"AND date('now', 'start of month', '{offset+1} month') "
+                    f"AND date('now', 'start of month', '{offset+1} month', '-1 day') "
                     f"AND id_employee_schedule IS NOT NULL "
                     f"AND mark = true "
-                    f"GROUP BY id_employee_schedule;")
+                    f"GROUP BY id_employee_schedule "
+                    f"ORDER BY name;")
+        statistics = cur.fetchall()
+        cur.close()
+        return statistics
     except Exception as e:
         print(e)
         return False
@@ -468,5 +481,23 @@ async def list_daily_task_mark_false(offset):
                 out_text = out_text + '-'
     else:
         out_text = out_text + '\n\nСписок задач пуст'
+
+    return out_text
+
+
+async def list_month_statistics(offset):
+    statistics = await db_get_user_statistics_month(offset)
+    date = await db_get_month_offset(offset)
+
+    date_object = datetime.strptime(date[0], '%Y-%m-%d').date()
+    out_text = f"📆Период: *{date_object.strftime('%B %Y')}*\n"
+    if statistics:
+        for user in statistics:
+            out_text += (f"\n\n"
+                         f"👤 *{user[1]}*\n"
+                         f"✅ Выполнено заданий: *{user[2]}*")
+
+    else:
+        out_text = out_text + '\n\nИнформация отсутствует'
 
     return out_text

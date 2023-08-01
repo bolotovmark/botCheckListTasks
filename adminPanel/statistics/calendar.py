@@ -2,7 +2,7 @@ from aiogram import Dispatcher, types
 
 from states.admin_panel import FormStatistics, FormNavigateCalendar
 from states.employee_panel import EmployeePanel, FormNavigateScheduleTasks
-from keyboards import Keyboards, kb_book_calendar, kb_book_admin_calendar
+from keyboards import Keyboards, kb_book_calendar, kb_book_admin_calendar_day
 from database.methods import db_get_list_daily_task_offset, db_get_schedule_tasks, \
     db_insert_many_daily_task, list_daily_task
 from aiogram.dispatcher import FSMContext
@@ -27,7 +27,7 @@ async def process_select_offset(callback_query: types.CallbackQuery, state: FSMC
         text=out_text,
         chat_id=callback_query.from_user.id,
         message_id=callback_query.message.message_id,
-        reply_markup=await kb_book_admin_calendar(offset),
+        reply_markup=await kb_book_admin_calendar_day(offset),
         parse_mode="Markdown"
     )
 
