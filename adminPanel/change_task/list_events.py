@@ -17,12 +17,22 @@ async def start_form_watchListEvents(message: types.Message):
 async def watch_events(callback_query: types.CallbackQuery):
     list_events_type = await db_get_list_events_type(callback_query.data)
     bot = callback_query.bot
-    out_text = ''
+    out_text = f'🔹*{list_events_type[0][5]}*\n\n'
     if list_events_type:
-        out_text = out_text + f"---{list_events_type[0][5]}---\n\n"
-        for event in list_events_type:
-            out_text = out_text + f"Задача: *{event[1]}*\n" \
-                                  f"------------------------------\n"
+        name_group = list_events_type[0][3]
+        if name_group is None:
+            out_text = out_text + "*🔘|Без группы|*\n"
+        else:
+            out_text = out_text + f"*🔘|{name_group}|*\n"
+        i = 0
+        for task in list_events_type:
+            i = i + 1
+            if name_group != task[3]:
+                i = 1
+                name_group = task[3]
+                out_text = out_text + f"\n*🔘|{name_group}|*\n"
+            out_text = out_text + f"{i}. *{task[1]}*\n"
+
     else:
         out_text = "⚠️Задач такого типа в базе нет!"
     await bot.edit_message_text(

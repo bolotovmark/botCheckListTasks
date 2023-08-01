@@ -44,7 +44,7 @@ async def process_get_type_id(callback_query: types.CallbackQuery, state: FSMCon
             out_text = out_text + f"{i}. *{task[0]}*\n"
 
     else:
-        out_text = out_text + 'Нет заданий'
+        out_text = out_text + 'Нет задач'
 
     await bot.edit_message_text(
         text=out_text + "\n*Выберите задачу, которую хотите добавить\n"
