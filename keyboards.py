@@ -116,7 +116,7 @@ class Keyboards:
     ###
     stat = types.ReplyKeyboardMarkup(resize_keyboard=True)
     stat.add(types.InlineKeyboardButton(text="Календарь задач"))
-    stat.add(types.InlineKeyboardButton(text="Статистика за месяц"))
+    stat.add(types.InlineKeyboardButton(text="Статистика выполенных задач"))
     stat.add(types.InlineKeyboardButton(text="↩️ Вернуться в главное меню"))
     ###
 

@@ -43,12 +43,21 @@ async def db_get_list_user():
     return users
 
 
-async def db_get_list_types_event(offset):
+async def db_get_list_types_event_offset(offset):
     cur = conn.cursor()
     cur.execute(f"SELECT DISTINCT id_type, name_type FROM daily_tasks "
                 f"JOIN event e on e.id_event = daily_tasks.id_event_task "
                 f"JOIN type_event te on te.id_type = e.id_type_event "
                 f"WHERE date_task = date('now','localtime', '{offset} day');")
+    types = cur.fetchall()
+    cur.close()
+    return types
+
+
+async def db_get_list_types_event():
+    cur = conn.cursor()
+    cur.execute(f"SELECT DISTINCT id_type, name_type FROM event "
+                f"JOIN type_event te on te.id_type = event.id_type_event")
     types = cur.fetchall()
     cur.close()
     return types
@@ -332,6 +341,22 @@ async def db_update_daily_task(task_id, employee_id, description):
         return False
 
 
+async def db_get_user_statistics_month(offset):
+    try:
+        cur = conn.cursor()
+        cur.execute(f"SELECT name, SUM(mark) AS count FROM daily_tasks "
+                    f"JOIN users u on u.id_user = daily_tasks.id_employee_schedule "
+                    f"WHERE date_task "
+                    f"BETWEEN date('now', 'start of month', '{offset} month') "
+                    f"AND date('now', 'start of month', '{offset+1} month') "
+                    f"AND id_employee_schedule IS NOT NULL "
+                    f"AND mark = true "
+                    f"GROUP BY id_employee_schedule;")
+    except Exception as e:
+        print(e)
+        return False
+
+
 async def list_schedule_task():
     types_event = await db_get_list_types_event()
     if types_event:
@@ -368,7 +393,7 @@ async def list_schedule_task():
 
 
 async def list_daily_task(offset):
-    types_event = await db_get_list_types_event(offset)
+    types_event = await db_get_list_types_event_offset(offset)
     date = await db_get_date_offset(offset)
     out_text = f"📆ДАТА: {date[0]}"
     if types_event:
@@ -414,7 +439,7 @@ async def list_daily_task(offset):
 async def list_daily_task_mark_false(offset):
     date = await db_get_date_offset(offset)
     out_text = f"📆ДАТА: {date[0]}"
-    types_event = await db_get_list_types_event(offset)
+    types_event = await db_get_list_types_event_offset(offset)
     if types_event:
         name_type = types_event[0][1]
         out_text = out_text + f'\n\n*🔹{name_type}*\n'

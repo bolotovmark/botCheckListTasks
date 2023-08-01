@@ -85,3 +85,6 @@ class FormStatistics(StatesGroup):
 class FormNavigateCalendar(StatesGroup):
     select_offset = State()
 
+
+class FormUserStatistics(StatesGroup):
+    select_offset = State()

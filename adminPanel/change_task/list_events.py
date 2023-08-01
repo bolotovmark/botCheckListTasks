@@ -12,20 +12,6 @@ async def start_form_watchListEvents(message: types.Message):
     await message.answer("Открыта форма просмотра списка задач", reply_markup=Keyboards.empty_method)
 
     await message.answer("Укажите, по какому типу хотите посмотреть задачи", reply_markup=await kb_types_events())
-    # list_events = await db_get_list_events()
-    # if list_events:
-    #     type_event = list_events[0][1]
-    #     out_text = f"*---{list_events[0][1]}---*\n\n\n"
-    #     for event in list_events:
-    #         if event[1] != type_event:
-    #             type_event = event[1]
-    #             await message.answer(out_text, parse_mode="Markdown")
-    #             out_text = f"*---{event[1]}---*\n\n\n"
-    #         out_text = out_text + f"Задача: *{event[0]}*\n" \
-    #                               f"------------------------------\n"
-    #     await message.answer(out_text, parse_mode="Markdown")
-    # else:
-    #     await message.answer("⚠️Задач в базе нет!")
 
 
 async def watch_events(callback_query: types.CallbackQuery):
