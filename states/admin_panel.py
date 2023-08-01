@@ -88,3 +88,7 @@ class FormNavigateCalendar(StatesGroup):
 
 class FormUserStatistics(StatesGroup):
     select_offset = State()
+
+
+class FormSetUrgentTask(StatesGroup):
+    select_name = State()

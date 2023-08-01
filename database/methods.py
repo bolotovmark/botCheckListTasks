@@ -120,7 +120,7 @@ async def db_get_list_events_type(id_type):
         cur.execute(f"SELECT * FROM event "
                     f"JOIN type_event te on te.id_type = event.id_type_event "
                     f"WHERE id_type = {id_type} "
-                    f"ORDER BY group_text ASC;")
+                    f"ORDER BY group_text, name_event ASC;")
         list_events_type = cur.fetchall()
         cur.close()
         return list_events_type
@@ -134,7 +134,7 @@ async def db_get_list_events_type_offset(id_type, offset):
         cur.execute(f"SELECT * FROM event "
                     f"JOIN type_event te on te.id_type = event.id_type_event "
                     f"WHERE id_type = {id_type} "
-                    f"ORDER BY group_text ASC "
+                    f"ORDER BY group_text, name_event ASC "
                     f"LIMIT {offset}, 5")
         list_events_type = cur.fetchall()
         cur.close()
@@ -172,7 +172,7 @@ async def db_get_list_schedule_type(id_type):
                     f"JOIN event e on e.id_event = list_schedule.id_event_schedule "
                     f"JOIN type_event te on e.id_type_event = te.id_type "
                     f"WHERE id_type = {id_type} "
-                    f"ORDER BY group_text ASC;")
+                    f"ORDER BY group_text, name_event ASC;")
         list_schedule = cur.fetchall()
         cur.close()
         return list_schedule
@@ -187,7 +187,7 @@ async def db_get_list_schedule_type_offset(id_type, offset):
                     f"JOIN event e on e.id_event = list_schedule.id_event_schedule "
                     f"JOIN type_event te on e.id_type_event = te.id_type "
                     f"WHERE id_type = {id_type} "
-                    f"ORDER BY group_text ASC "
+                    f"ORDER BY group_text, name_event ASC "
                     f"LIMIT {offset}, 5")
         list_schedule = cur.fetchall()
         cur.close()
@@ -370,6 +370,24 @@ async def db_get_user_statistics_month(offset):
         statistics = cur.fetchall()
         cur.close()
         return statistics
+    except Exception as e:
+        print(e)
+        return False
+
+
+async def db_insert_urgent_task(name):
+    try:
+        cur = conn.cursor()
+        cur.execute(f"INSERT INTO event(name_event, id_type_event) VALUES (?,  ?)",
+                    (name, 1))
+        conn.commit()
+        id_event = cur.lastrowid
+        cur.close()
+        cur = conn.cursor()
+        print(id_event)
+        cur.execute(f"INSERT INTO daily_tasks(id_event_task) VALUES ({int(id_event)})")
+        conn.commit()
+        cur.close()
     except Exception as e:
         print(e)
         return False

@@ -1,6 +1,7 @@
 from aiogram import Dispatcher, types
 from states.admin_panel import (AdminPanel, FormChangeListUsers,
-                                FormChangeTasks, FormChangeScheduleTask,  FormStatistics)
+                                FormChangeTasks, FormChangeScheduleTask,  FormStatistics,
+                                FormSetUrgentTask)
 from keyboards import Keyboards
 
 
@@ -43,7 +44,7 @@ def register_handlers_admin_panel(dp: Dispatcher):
                                 message.text not in ["Панель управления пользователями",
                                                      "Панель управления задачами",
                                                      "Панель управления ежедневным расписанием",
-                                                     "Статистика"],
+                                                     "Статистика", "Назначить срочное задание"],
                                 state=AdminPanel.menu)
 
     dp.register_message_handler(menu_changeUsers,
@@ -70,4 +71,5 @@ def register_handlers_admin_panel(dp: Dispatcher):
                                 content_types=['text'],
                                 text='↩️ Вернуться в главное меню',
                                 state=[FormChangeListUsers, FormChangeTasks,
-                                       FormChangeScheduleTask, FormStatistics])
+                                       FormChangeScheduleTask, FormStatistics,
+                                       FormSetUrgentTask])
