@@ -11,8 +11,9 @@ async def start_form_removeTypeEvent(message: types.Message):
     await FormRemoveTypeEvent.select_type.set()
     await message.answer("Открыта форма удаления типов", reply_markup=Keyboards.empty_method)
 
-    await message.answer("⚠️\nВсе связанные с этим типом задачи будут удалены\n"
-                         "\nУкажите, какой тип хотите удалить", reply_markup=await kb_types_events())
+    await message.answer("*‼️\nВсе связанные с этим типом задачи будут удалены\n*"
+                         "\nУкажите, какой тип хотите удалить", reply_markup=await kb_types_events(),
+                         parse_mode="Markdown")
 
 
 async def process_remove_type_event(callback_query: types.CallbackQuery):

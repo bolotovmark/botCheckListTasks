@@ -1,5 +1,4 @@
 from aiogram import Dispatcher, types
-from adminPanel.panel import menu_changeScheduleTask
 from states.admin_panel import *
 
 from database.methods import list_schedule_task

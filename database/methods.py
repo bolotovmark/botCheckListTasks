@@ -1,4 +1,5 @@
 import sqlite3
+from datetime import datetime
 
 conn = sqlite3.connect('db.sqlite')
 
@@ -43,12 +44,27 @@ async def db_get_list_user():
     return users
 
 
-async def db_get_list_types_event():
+async def db_get_list_types_event_offset(offset):
     cur = conn.cursor()
-    cur.execute("SELECT * FROM type_event;")
+    cur.execute(f"SELECT DISTINCT id_type, name_type FROM daily_tasks "
+                f"JOIN event e on e.id_event = daily_tasks.id_event_task "
+                f"JOIN type_event te on te.id_type = e.id_type_event "
+                f"WHERE date_task = date('now','localtime', '{offset} day') "
+                f"ORDER BY name_type;")
     types = cur.fetchall()
     cur.close()
     return types
+
+
+async def db_get_list_types_event():
+    cur = conn.cursor()
+    cur.execute(f"SELECT DISTINCT id_type, name_type FROM event "
+                f"JOIN type_event te on te.id_type = event.id_type_event "
+                f"WHERE id_type != 1")
+    types = cur.fetchall()
+    cur.close()
+    return types
+
 
 
 async def db_insert_new_type_event(name_type):
@@ -104,7 +120,7 @@ async def db_get_list_events_type(id_type):
         cur.execute(f"SELECT * FROM event "
                     f"JOIN type_event te on te.id_type = event.id_type_event "
                     f"WHERE id_type = {id_type} "
-                    f"ORDER BY group_text ASC;")
+                    f"ORDER BY group_text, name_event ASC;")
         list_events_type = cur.fetchall()
         cur.close()
         return list_events_type
@@ -118,7 +134,7 @@ async def db_get_list_events_type_offset(id_type, offset):
         cur.execute(f"SELECT * FROM event "
                     f"JOIN type_event te on te.id_type = event.id_type_event "
                     f"WHERE id_type = {id_type} "
-                    f"ORDER BY group_text ASC "
+                    f"ORDER BY group_text, name_event ASC "
                     f"LIMIT {offset}, 5")
         list_events_type = cur.fetchall()
         cur.close()
@@ -152,12 +168,11 @@ async def db_remove_type(id_type):
 async def db_get_list_schedule_type(id_type):
     try:
         cur = conn.cursor()
-        cur.execute(f"SELECT name_event, group_text, name_type, name FROM list_schedule "
+        cur.execute(f"SELECT name_event, group_text, name_type FROM list_schedule "
                     f"JOIN event e on e.id_event = list_schedule.id_event_schedule "
-                    f"JOIN users u on u.id_user = list_schedule.id_author "
                     f"JOIN type_event te on e.id_type_event = te.id_type "
                     f"WHERE id_type = {id_type} "
-                    f"ORDER BY group_text ASC;")
+                    f"ORDER BY group_text, name_event ASC;")
         list_schedule = cur.fetchall()
         cur.close()
         return list_schedule
@@ -168,12 +183,11 @@ async def db_get_list_schedule_type(id_type):
 async def db_get_list_schedule_type_offset(id_type, offset):
     try:
         cur = conn.cursor()
-        cur.execute(f"SELECT id_schedule, name_event, group_text, name_type, name FROM list_schedule "
+        cur.execute(f"SELECT id_schedule, name_event, group_text, name_type FROM list_schedule "
                     f"JOIN event e on e.id_event = list_schedule.id_event_schedule "
-                    f"JOIN users u on u.id_user = list_schedule.id_author "
                     f"JOIN type_event te on e.id_type_event = te.id_type "
                     f"WHERE id_type = {id_type} "
-                    f"ORDER BY group_text ASC "
+                    f"ORDER BY group_text, name_event ASC "
                     f"LIMIT {offset}, 5")
         list_schedule = cur.fetchall()
         cur.close()
@@ -182,11 +196,10 @@ async def db_get_list_schedule_type_offset(id_type, offset):
         return False
 
 
-async def db_insert_new_schedule_task(id_event, id_author):
+async def db_insert_new_schedule_task(id_event):
     try:
         cur = conn.cursor()
-        data_insert = (id_event, id_author)
-        cur.execute(f"INSERT INTO list_schedule(id_event_schedule, id_author) VALUES (?, ?)", data_insert)
+        cur.execute(f"INSERT INTO list_schedule(id_event_schedule) VALUES ({id_event})")
         conn.commit()
         cur.close()
     except:
@@ -195,13 +208,13 @@ async def db_insert_new_schedule_task(id_event, id_author):
 
 async def db_remove_schedule_task(id_task):
     try:
-        print(id_task)
         cur = conn.cursor()
         cur.execute("PRAGMA foreign_keys = ON")
-        cur.execute(f"DELETE FROM list_schedule WHERE id_schedule = {id_task}")
+        cur.execute(f"DELETE FROM list_schedule WHERE id_schedule == {id_task}")
         conn.commit()
         cur.close()
-    except:
+    except Exception as e:
+        print(e)
         return False
 
 
@@ -209,8 +222,7 @@ async def db_get_list_daily_task_offset(offset):
     try:
         cur = conn.cursor()
         cur.execute(f"SELECT id_task, date_task, name_event, name_type, group_text  FROM daily_tasks "
-                    f"JOIN list_schedule ls on ls.id_schedule = daily_tasks.id_schedule_task "
-                    f"JOIN event e on e.id_event = ls.id_event_schedule "
+                    f"JOIN event e on e.id_event = daily_tasks.id_event_task "
                     f"JOIN type_event te on te.id_type = e.id_type_event "
                     f"WHERE date_task = date('now','localtime', '{offset} day');")
         list_tasks = cur.fetchall()
@@ -223,15 +235,17 @@ async def db_get_list_daily_task_offset(offset):
 async def db_get_list_daily_task_type(type_id, offset):
     try:
         cur = conn.cursor()
-        cur.execute(f"SELECT id_task, date_task, name_event, name_type, group_text, mark  FROM daily_tasks "
-                    f"JOIN list_schedule ls on ls.id_schedule = daily_tasks.id_schedule_task "
-                    f"JOIN event e on e.id_event = ls.id_event_schedule "
+        cur.execute(f"SELECT id_task, date_task, name_event, name_type, group_text, mark, description, name FROM daily_tasks "
+                    f"JOIN event e on e.id_event = daily_tasks.id_event_task "
                     f"JOIN type_event te on te.id_type = e.id_type_event "
-                    f"WHERE id_type = {type_id} AND date_task = date('now','localtime', '{offset} day');")
+                    f"LEFT JOIN users u on u.id_user = daily_tasks.id_employee_schedule "
+                    f"WHERE id_type = {type_id} AND date_task = date('now','localtime', '{offset} day') "
+                    f"ORDER BY mark;")
         list_tasks = cur.fetchall()
         cur.close()
         return list_tasks
-    except:
+    except Exception as e:
+        print(e)
         return False
 
 
@@ -239,12 +253,12 @@ async def db_get_list_daily_task_type_mark_false(type_id, offset):
     try:
         cur = conn.cursor()
         cur.execute(f"SELECT id_task, date_task, name_event, name_type, group_text, mark  FROM daily_tasks "
-                    f"JOIN list_schedule ls on ls.id_schedule = daily_tasks.id_schedule_task "
-                    f"JOIN event e on e.id_event = ls.id_event_schedule "
+                    f"JOIN event e on e.id_event = daily_tasks.id_event_task "
                     f"JOIN type_event te on te.id_type = e.id_type_event "
                     f"WHERE id_type = {type_id} "
                     f"AND date_task = date('now','localtime', '{offset} day') "
-                    f"AND mark == false;")
+                    f"AND mark == false "
+                    f"ORDER BY name_event;")
         list_tasks = cur.fetchall()
         cur.close()
         return list_tasks
@@ -256,11 +270,11 @@ async def db_get_list_daily_task_mark_false(day, page):
     try:
         cur = conn.cursor()
         cur.execute(f"SELECT id_task, date_task, name_event, name_type, group_text, mark  FROM daily_tasks "
-                    f"JOIN list_schedule ls on ls.id_schedule = daily_tasks.id_schedule_task "
-                    f"JOIN event e on e.id_event = ls.id_event_schedule "
+                    f"JOIN event e on e.id_event = daily_tasks.id_event_task "
                     f"JOIN type_event te on te.id_type = e.id_type_event "
                     f"WHERE date_task = date('now','localtime', '{day} day') "
                     f"AND mark == false "
+                    f"ORDER BY name_type, name_event "
                     f"LIMIT {page}, 5;")
         list_tasks = cur.fetchall()
         cur.close()
@@ -272,7 +286,7 @@ async def db_get_list_daily_task_mark_false(day, page):
 async def db_insert_many_daily_task(list_tasks):
     try:
         cur = conn.cursor()
-        cur.executemany("INSERT INTO daily_tasks(id_schedule_task) VALUES (?);", list_tasks)
+        cur.executemany("INSERT INTO daily_tasks(id_event_task) VALUES (?);", list_tasks)
         conn.commit()
         cur.close()
     except:
@@ -282,7 +296,7 @@ async def db_insert_many_daily_task(list_tasks):
 async def db_get_schedule_tasks():
     try:
         cur = conn.cursor()
-        cur.execute("SELECT id_schedule FROM list_schedule;")
+        cur.execute("SELECT id_event_schedule FROM list_schedule;")
         list_tasks = cur.fetchall()
         cur.close()
         return list_tasks
@@ -298,11 +312,18 @@ async def db_get_date_offset(offset):
     return date
 
 
+async def db_get_month_offset(offset):
+    cur = conn.cursor()
+    cur.execute(f"SELECT date('now', 'localtime', '{offset} month');")
+    month = cur.fetchone()
+    cur.close()
+    return month
+
+
 async def db_get_daily_task(task_id):
     cur = conn.cursor()
     cur.execute(f"SELECT id_task, name_event, name_type, group_text FROM daily_tasks "
-                f"JOIN list_schedule ls on ls.id_schedule = daily_tasks.id_schedule_task "
-                f"JOIN event e on e.id_event = ls.id_event_schedule "
+                f"JOIN event e on e.id_event = daily_tasks.id_event_task "
                 f"JOIN type_event te on te.id_type = e.id_type_event "
                 f"WHERE id_task == {task_id}")
     task = cur.fetchone()
@@ -334,6 +355,44 @@ async def db_update_daily_task(task_id, employee_id, description):
         return False
 
 
+async def db_get_user_statistics_month(offset):
+    try:
+        cur = conn.cursor()
+        cur.execute(f"SELECT id_user, name, SUM(mark) AS count FROM daily_tasks "
+                    f"JOIN users u on u.id_user = daily_tasks.id_employee_schedule "
+                    f"WHERE date_task "
+                    f"BETWEEN date('now', 'start of month', '{offset} month') "
+                    f"AND date('now', 'start of month', '{offset+1} month', '-1 day') "
+                    f"AND id_employee_schedule IS NOT NULL "
+                    f"AND mark = true "
+                    f"GROUP BY id_employee_schedule "
+                    f"ORDER BY name;")
+        statistics = cur.fetchall()
+        cur.close()
+        return statistics
+    except Exception as e:
+        print(e)
+        return False
+
+
+async def db_insert_urgent_task(name):
+    try:
+        cur = conn.cursor()
+        cur.execute(f"INSERT INTO event(name_event, id_type_event) VALUES (?,  ?)",
+                    (name, 1))
+        conn.commit()
+        id_event = cur.lastrowid
+        cur.close()
+        cur = conn.cursor()
+        print(id_event)
+        cur.execute(f"INSERT INTO daily_tasks(id_event_task) VALUES ({int(id_event)})")
+        conn.commit()
+        cur.close()
+    except Exception as e:
+        print(e)
+        return False
+
+
 async def list_schedule_task():
     types_event = await db_get_list_types_event()
     if types_event:
@@ -359,7 +418,7 @@ async def list_schedule_task():
                         i = 1
                         name_group = task[1]
                         out_text = out_text + f"\n  🔘*|{name_group}|*\n"
-                    out_text = out_text + f"{i}. *{task[0]}* \n`назначил: ({task[3]})`\n"
+                    out_text = out_text + f"{i}. *{task[0]}*\n"
 
             else:
                 out_text = out_text + '-'
@@ -370,11 +429,12 @@ async def list_schedule_task():
 
 
 async def list_daily_task(offset):
-    types_event = await db_get_list_types_event()
+    types_event = await db_get_list_types_event_offset(offset)
+    date = await db_get_date_offset(offset)
+    out_text = f"📆ДАТА: {date[0]}"
     if types_event:
-        date = await db_get_date_offset(offset)
         name_type = types_event[0][1]
-        out_text = f'📆ДАТА: {date[0]}\n\n*🔹{name_type}*\n'
+        out_text = out_text + f'\n\n*🔹{name_type}*\n'
         for type_event in types_event:
             if name_type != type_event[1]:
                 name_type = type_event[1]
@@ -395,26 +455,30 @@ async def list_daily_task(offset):
                         i = 1
                         name_group = task[4]
                         out_text = out_text + f"\n  🔘*|{name_group}|*\n"
-                    out_text = out_text + f"{i}. "
+                    # out_text = out_text + f"{i}. "
                     if bool(task[5]):
-                        out_text = out_text + "✅"
+                        out_text = out_text + (f"\n{i}. ✅ *{task[2]}*\n"
+                                               f"    👤Исполнитель: *{task[7]}*\n")
+                        if not task[6] is None:
+                            out_text = out_text + f"    📜Комментарий: *{task[6]}*\n"
                     else:
-                        out_text = out_text + "❌"
-                    out_text = out_text + f' *{task[2]}*\n'
+                        out_text = out_text + f"{i}. ❌ *{task[2]}*\n"
+
             else:
                 out_text = out_text + '-'
     else:
-        out_text = 'Список задач пуст'
+        out_text = out_text + '\n\nСписок задач пуст'
 
     return out_text
 
 
 async def list_daily_task_mark_false(offset):
-    types_event = await db_get_list_types_event()
+    date = await db_get_date_offset(offset)
+    out_text = f"📆ДАТА: {date[0]}"
+    types_event = await db_get_list_types_event_offset(offset)
     if types_event:
-        date = await db_get_date_offset(offset)
         name_type = types_event[0][1]
-        out_text = f'📆ДАТА: {date[0]}\n\n*🔹{name_type}*\n'
+        out_text = out_text + f'\n\n*🔹{name_type}*\n'
         for type_event in types_event:
             if name_type != type_event[1]:
                 name_type = type_event[1]
@@ -439,6 +503,24 @@ async def list_daily_task_mark_false(offset):
             else:
                 out_text = out_text + '-'
     else:
-        out_text = 'Список задач пуст'
+        out_text = out_text + '\n\nСписок задач пуст'
+
+    return out_text
+
+
+async def list_month_statistics(offset):
+    statistics = await db_get_user_statistics_month(offset)
+    date = await db_get_month_offset(offset)
+
+    date_object = datetime.strptime(date[0], '%Y-%m-%d').date()
+    out_text = f"📆Период: *{date_object.strftime('%B %Y')}*\n"
+    if statistics:
+        for user in statistics:
+            out_text += (f"\n\n"
+                         f"👤 *{user[1]}*\n"
+                         f"✅ Выполнено заданий: *{user[2]}*")
+
+    else:
+        out_text = out_text + '\n\nИнформация отсутствует'
 
     return out_text

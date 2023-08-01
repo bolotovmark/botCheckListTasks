@@ -14,9 +14,7 @@ CREATE TABLE `type_event` (
 CREATE TABLE `list_schedule` (
   `id_schedule` integer PRIMARY KEY,
   `id_event_schedule` integer,
-  `id_author` integer,
-  FOREIGN KEY (`id_event_schedule`) REFERENCES `event` (`id_event`) ON DELETE CASCADE,
-  FOREIGN KEY (`id_author`) REFERENCES `users` (`id_user`) ON DELETE CASCADE
+  FOREIGN KEY (`id_event_schedule`) REFERENCES `event` (`id_event`) ON DELETE CASCADE
 );
 
 CREATE TABLE `positions` (
@@ -28,20 +26,23 @@ CREATE TABLE `users` (
   `id_user` integer PRIMARY KEY,
   `id_position_user` integer,
   `name` text,
-  FOREIGN KEY (`id_position_user`) REFERENCES `positions` (`id_position`) ON DELETE CASCADE
+  FOREIGN KEY (`id_position_user`) REFERENCES `positions` (`id_position`) ON DELETE SET NULL
 );
 
 CREATE TABLE `daily_tasks` (
   `id_task` integer PRIMARY KEY,
   `date_task` date DEFAULT (date('now','localtime')),
-  `id_schedule_task` integer,
+  `id_event_task` integer,
   `id_employee_schedule` integer,
   `mark` integer DEFAULT false,
   `description` text,
-  FOREIGN KEY (`id_schedule_task`) REFERENCES `list_schedule` (`id_schedule`),
-  FOREIGN KEY (`id_employee_schedule`) REFERENCES `users` (`id_user`) ON DELETE CASCADE
+  FOREIGN KEY (`id_event_task`) REFERENCES `event` (`id_event`) ON DELETE SET NULL,
+  FOREIGN KEY (`id_employee_schedule`) REFERENCES `users` (`id_user`) ON DELETE SET NULL
 );
 
+INSERT INTO positions(id_position, name_position) VALUES ((1, 'Рабочий'), (2, 'Администратор'));
+INSERT INTO users(id_user, id_position_user, name) VALUES (566332122, 2, 'Болотов Марк Дмитриевич');
+INSERT INTO type_event(id_type, name_type) VALUES (1, 'Срочные задания');
 
 --CREATE TABLE `positions` (
 --  `id_position` integer PRIMARY KEY,

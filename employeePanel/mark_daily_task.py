@@ -9,10 +9,10 @@ from aiogram.dispatcher import FSMContext
 
 
 async def start_form_markDailyTask(message: types.Message, state: FSMContext):
-    await FormMarkDailyTask.select_offset.set()
     async with state.proxy() as data:
         data['day'] = 0
         data['user_id'] = message.from_user.id
+    await FormMarkDailyTask.select_offset.set()
     await message.answer("Открыта форма отметки задач", reply_markup=Keyboards.empty_method)
     await message.answer("Выберите за какой день, хотите отметить задачу", reply_markup=Keyboards.select_day)
 
@@ -27,7 +27,7 @@ async def process_get_offset_day_id(callback_query: types.CallbackQuery, state: 
     out_text = await list_daily_task_mark_false(day)
     await FormMarkDailyTask.select_task_id.set()
     await bot.edit_message_text(
-        text=out_text + "\n*Выберите задачу, которую хотите удалить*",
+        text=out_text + "\n*Выберите задачу, которую хотите отметить*",
         chat_id=callback_query.from_user.id,
         message_id=callback_query.message.message_id,
         reply_markup=await kb_book_daily_task(day, 0),
@@ -84,6 +84,7 @@ async def process_back_page(callback_query: types.CallbackQuery, state: FSMConte
 async def process_back_to_menu(callback_query: types.CallbackQuery, state: FSMContext):
     async with state.proxy() as data:
         data['page'] = 0
+        callback_query.message.from_user.id = data['user_id']
     return await start_form_markDailyTask(callback_query.message, state)
 
 
@@ -133,10 +134,10 @@ async def process_set_description(message: types.Message, state: FSMContext):
         await db_update_daily_task(task_id, user_id, description)
         await message.answer("✅ Задача успешно отмечена!")
     else:
-
         await message.answer("❌ Задача была отмечена ранее другим пользователем!")
-    await EmployeePanel.menu.set()
     await state.reset_data()
+    await EmployeePanel.menu.set()
+    # await state.finish()
     return await employee_menu(message)
 
 
