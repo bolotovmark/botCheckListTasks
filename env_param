@@ -1,0 +1,10 @@
+# Этот файл необходимо переименовать в ' .env'
+
+# Токен бота, узнать можно у https://t.me/botfather
+API_TOKEN='123456789:abcdefghijklmnopqrstuvwxyz'
+
+# Telegram ID первого пользователя
+FIRST_USER_ID=566332122434
+
+# Имя первого пользователя
+FIRST_USER_NAME='Имя Фамилия Отчество'

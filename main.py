@@ -38,7 +38,12 @@ from employeePanel.list_task import register_handlers_employee_calendar_panel
 from employeePanel.mark_daily_task import register_handlers_employee_panel_markDailyTask
 from database.methods import db_exists_user, db_remove_user
 
-API_TOKEN = '6323770760:AAFpXBDSSXeg5fqscK2ReStDX8oVFfSoDYE'
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+API_TOKEN = os.getenv("API_TOKEN")
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
