@@ -2,7 +2,7 @@ from aiogram import Dispatcher, types
 from states.employee_panel import EmployeePanel, FormNavigateScheduleTasks
 from keyboards import Keyboards, kb_book_calendar
 from database.methods import db_get_list_daily_task_offset, db_get_schedule_tasks, \
-    db_insert_many_daily_task, list_daily_task
+    db_insert_many_daily_task, list_daily_task, db_get_list_daily_task_except_urgent_offset
 from aiogram.dispatcher import FSMContext
 
 
@@ -52,7 +52,7 @@ async def process_change_offset_today(callback_query: types.CallbackQuery, state
 
 
 async def process_generate_daily_task(callback_query: types.CallbackQuery, state: FSMContext):
-    if not await db_get_list_daily_task_offset(0):
+    if not await db_get_list_daily_task_except_urgent_offset(0):
         schedule_task = await db_get_schedule_tasks()
         await db_insert_many_daily_task(schedule_task)
 
