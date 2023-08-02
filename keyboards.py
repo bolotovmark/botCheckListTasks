@@ -3,7 +3,7 @@ from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 from database.methods import db_get_list_types_event, db_get_list_events_type, \
     db_get_list_events_type_offset, db_get_list_schedule_type_offset, db_get_list_daily_task_offset, \
-    db_get_list_daily_task_mark_false
+    db_get_list_daily_task_mark_false, db_get_list_daily_task_except_urgent_offset
 
 
 class Keyboards:
@@ -219,7 +219,7 @@ async def kb_book_schedule_tasks(type_id, offset):
 
 
 async def kb_book_calendar(offset):
-    daily_task = await db_get_list_daily_task_offset(offset)
+    daily_task = await db_get_list_daily_task_except_urgent_offset(offset)
 
     inline_kb_full = InlineKeyboardMarkup(row_width=2)
     if daily_task:

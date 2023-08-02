@@ -232,6 +232,20 @@ async def db_get_list_daily_task_offset(offset):
         return False
 
 
+async def db_get_list_daily_task_except_urgent_offset(offset):
+    try:
+        cur = conn.cursor()
+        cur.execute(f"SELECT id_task, date_task, name_event, name_type, group_text  FROM daily_tasks "
+                    f"JOIN event e on e.id_event = daily_tasks.id_event_task "
+                    f"JOIN type_event te on te.id_type = e.id_type_event "
+                    f"WHERE date_task = date('now','localtime', '{offset} day') "
+                    f"AND id_type != 1;")
+        list_tasks = cur.fetchall()
+        cur.close()
+        return list_tasks
+    except:
+        return False
+
 async def db_get_list_daily_task_type(type_id, offset):
     try:
         cur = conn.cursor()
@@ -384,7 +398,6 @@ async def db_insert_urgent_task(name):
         id_event = cur.lastrowid
         cur.close()
         cur = conn.cursor()
-        print(id_event)
         cur.execute(f"INSERT INTO daily_tasks(id_event_task) VALUES ({int(id_event)})")
         conn.commit()
         cur.close()
