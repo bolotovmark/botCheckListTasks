@@ -40,9 +40,8 @@ CREATE TABLE `daily_tasks` (
   FOREIGN KEY (`id_employee_schedule`) REFERENCES `users` (`id_user`) ON DELETE SET NULL
 );
 
-INSERT INTO positions(id_position, name_position) VALUES ((1, 'Рабочий'), (2, 'Администратор'));
-INSERT INTO users(id_user, id_position_user, name) VALUES (566332122, 2, 'Болотов Марк Дмитриевич');
-INSERT INTO type_event(id_type, name_type) VALUES (1, 'Срочные задания');
+-- INSERT INTO positions(id_position, name_position) VALUES ((1, 'Рабочий'), (2, 'Администратор'));
+-- INSERT INTO type_event(id_type, name_type) VALUES (1, 'Срочные задания');
 
 --CREATE TABLE `positions` (
 --  `id_position` integer PRIMARY KEY,
